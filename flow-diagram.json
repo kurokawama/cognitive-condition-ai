@@ -1,0 +1,497 @@
+{
+  "version": "1.1.0",
+  "project": {
+    "name": "認知コンディション AI",
+    "description": "毎日1分の認知チェックとAIコーチングアプリ",
+    "created_at": "2026-03-14",
+    "updated_at": "2026-03-14",
+    "update_note": "4名合議結果反映: D7無料体験/スキップパス/文脈型通知許諾/3タップオンボーディング"
+  },
+
+  "roles": [
+    {
+      "id": "free_user",
+      "name": "無料ユーザー",
+      "description": "日次チェック・スコア・7日推移・ひとこと記録・自己ベスト・連続記録・基本リマインド",
+      "auth_level": "free",
+      "test_account": {
+        "email": "free@test.example.com",
+        "note": "無料プランテストユーザー"
+      }
+    },
+    {
+      "id": "premium_user",
+      "name": "有料ユーザー",
+      "description": "全機能利用可能：AIトーク・AI分析・週次レポート・90日履歴・パーソナル提案・気づき通知",
+      "auth_level": "premium",
+      "test_account": {
+        "email": "premium@test.example.com",
+        "note": "有料プランテストユーザー"
+      }
+    },
+    {
+      "id": "guest",
+      "name": "未登録ユーザー",
+      "description": "アプリ初回起動・オンボーディング",
+      "auth_level": "guest",
+      "test_account": {
+        "email": "",
+        "note": "未認証状態"
+      }
+    }
+  ],
+
+  "pages": [
+    {
+      "id": "onboarding",
+      "path": "/onboarding",
+      "name": "オンボーディング",
+      "layout_group": "auth",
+      "requires_auth": false,
+      "allowed_roles": ["guest"],
+      "components": {
+        "buttons": [
+          { "id": "btn_start", "label": "始める", "action": "オンボーディング開始", "action_type": "navigation", "target": "/onboarding/step1", "expected_result": "説明画面に遷移" },
+          { "id": "btn_skip", "label": "スキップ", "action": "オンボーディングスキップ", "action_type": "navigation", "target": "/signup", "expected_result": "登録画面に遷移" }
+        ],
+        "links": [],
+        "forms": [],
+        "data_displays": []
+      }
+    },
+    {
+      "id": "signup",
+      "path": "/signup",
+      "name": "新規登録",
+      "layout_group": "auth",
+      "requires_auth": false,
+      "allowed_roles": ["guest"],
+      "components": {
+        "buttons": [
+          { "id": "btn_signup", "label": "登録", "action": "ユーザー登録", "action_type": "server_action", "target": "signUp", "expected_result": "アカウント作成→ホーム画面に遷移" }
+        ],
+        "links": [
+          { "id": "link_login", "label": "ログイン", "destination": "/login", "type": "navigation" }
+        ],
+        "forms": [
+          { "id": "form_signup", "name": "新規登録フォーム", "action": "signUp", "fields": ["email", "password", "age_group", "nickname"], "submit_button": "btn_signup", "validation": "メール形式・パスワード8文字以上・年代必須" }
+        ],
+        "data_displays": []
+      }
+    },
+    {
+      "id": "login",
+      "path": "/login",
+      "name": "ログイン",
+      "layout_group": "auth",
+      "requires_auth": false,
+      "allowed_roles": ["guest"],
+      "components": {
+        "buttons": [
+          { "id": "btn_login", "label": "ログイン", "action": "ログイン", "action_type": "server_action", "target": "signIn", "expected_result": "認証成功→ホーム画面に遷移" }
+        ],
+        "links": [
+          { "id": "link_signup", "label": "新規登録", "destination": "/signup", "type": "navigation" },
+          { "id": "link_forgot", "label": "パスワードを忘れた", "destination": "/forgot-password", "type": "navigation" }
+        ],
+        "forms": [
+          { "id": "form_login", "name": "ログインフォーム", "action": "signIn", "fields": ["email", "password"], "submit_button": "btn_login", "validation": "メール・パスワード必須" }
+        ],
+        "data_displays": []
+      }
+    },
+    {
+      "id": "home",
+      "path": "/",
+      "name": "ホーム",
+      "layout_group": "main",
+      "requires_auth": true,
+      "allowed_roles": ["free_user", "premium_user"],
+      "components": {
+        "buttons": [
+          { "id": "btn_start_check", "label": "今日のチェックを始める", "action": "日次チェック開始", "action_type": "navigation", "target": "/check", "expected_result": "認知チェック画面に遷移" },
+          { "id": "btn_hitokoto", "label": "ひとこと記録", "action": "ひとこと記録モーダル表示", "action_type": "modal", "target": "hitokoroModal", "expected_result": "睡眠・気分・忙しさの記録モーダルが開く" }
+        ],
+        "links": [
+          { "id": "link_history", "label": "履歴", "destination": "/history", "type": "navigation" },
+          { "id": "link_ai_talk", "label": "AIトーク", "destination": "/ai-talk", "type": "navigation" },
+          { "id": "link_analysis", "label": "分析", "destination": "/analysis", "type": "navigation" }
+        ],
+        "forms": [],
+        "data_displays": [
+          { "id": "data_today_score", "type": "kpi", "data_source": "getTodayScore", "description": "今日の総合スコア（100点満点）" },
+          { "id": "data_streak", "type": "kpi", "data_source": "getStreak", "description": "連続記録日数" },
+          { "id": "data_best_score", "type": "kpi", "data_source": "getBestScore", "description": "自己ベストスコア" },
+          { "id": "data_latest_comment", "type": "card", "data_source": "getLatestComment", "description": "最新のAIコメント" }
+        ]
+      }
+    },
+    {
+      "id": "check",
+      "path": "/check",
+      "name": "認知チェック",
+      "layout_group": "check",
+      "requires_auth": true,
+      "allowed_roles": ["free_user", "premium_user"],
+      "components": {
+        "buttons": [
+          { "id": "btn_reaction", "label": "反応速度テスト", "action": "テスト開始", "action_type": "client_state", "target": "startReactionTest", "expected_result": "反応速度テストが開始される" },
+          { "id": "btn_memory", "label": "短期記憶テスト", "action": "テスト開始", "action_type": "client_state", "target": "startMemoryTest", "expected_result": "短期記憶テストが開始される" },
+          { "id": "btn_attention", "label": "注意切替テスト", "action": "テスト開始", "action_type": "client_state", "target": "startAttentionTest", "expected_result": "注意切替テストが開始される" }
+        ],
+        "links": [],
+        "forms": [],
+        "data_displays": [
+          { "id": "data_progress", "type": "kpi", "data_source": "getCheckProgress", "description": "テスト進行状況（1/3, 2/3, 3/3）" }
+        ]
+      }
+    },
+    {
+      "id": "check_result",
+      "path": "/check/result",
+      "name": "チェック結果",
+      "layout_group": "check",
+      "requires_auth": true,
+      "allowed_roles": ["free_user", "premium_user"],
+      "components": {
+        "buttons": [
+          { "id": "btn_hitokoto_result", "label": "ひとこと記録", "action": "結果画面からひとこと記録", "action_type": "modal", "target": "hitokotoModal", "expected_result": "記録モーダルが開く" },
+          { "id": "btn_to_analysis", "label": "詳しく見る", "action": "AI分析に遷移", "action_type": "navigation", "target": "/analysis", "expected_result": "AI分析画面に遷移（有料のみ）" },
+          { "id": "btn_share", "label": "共有", "action": "結果共有", "action_type": "client_state", "target": "shareResult", "expected_result": "共有シートが表示される" }
+        ],
+        "links": [
+          { "id": "link_home_from_result", "label": "ホームに戻る", "destination": "/", "type": "navigation" }
+        ],
+        "forms": [],
+        "data_displays": [
+          { "id": "data_total_score", "type": "kpi", "data_source": "getCheckResult", "description": "総合スコア 100点満点" },
+          { "id": "data_sub_scores", "type": "chart", "data_source": "getSubScores", "description": "3サブスコア（反応速度・短期記憶・注意切替）" },
+          { "id": "data_comparison", "type": "card", "data_source": "getComparison", "description": "前日比・自己ベスト比・自己平均比" },
+          { "id": "data_quick_comment", "type": "card", "data_source": "getQuickComment", "description": "自己ベスト更新・軽いコメント" }
+        ]
+      }
+    },
+    {
+      "id": "ai_talk",
+      "path": "/ai-talk",
+      "name": "AIトーク",
+      "layout_group": "main",
+      "requires_auth": true,
+      "allowed_roles": ["premium_user"],
+      "components": {
+        "buttons": [
+          { "id": "btn_send_message", "label": "送信", "action": "メッセージ送信", "action_type": "server_action", "target": "sendAiMessage", "expected_result": "AIが1-3往復の対話で応答" }
+        ],
+        "links": [],
+        "forms": [
+          { "id": "form_chat", "name": "チャットフォーム", "action": "sendAiMessage", "fields": ["message"], "submit_button": "btn_send_message", "validation": "メッセージ必須・500文字以内" }
+        ],
+        "data_displays": [
+          { "id": "data_chat_log", "type": "card", "data_source": "getChatHistory", "description": "会話ログ" },
+          { "id": "data_today_theme", "type": "card", "data_source": "getTodayTheme", "description": "本日のテーマ" },
+          { "id": "data_summary", "type": "card", "data_source": "getChatSummary", "description": "会話サマリ" }
+        ]
+      }
+    },
+    {
+      "id": "analysis",
+      "path": "/analysis",
+      "name": "AI分析",
+      "layout_group": "main",
+      "requires_auth": true,
+      "allowed_roles": ["premium_user"],
+      "components": {
+        "buttons": [],
+        "links": [],
+        "forms": [],
+        "data_displays": [
+          { "id": "data_trend", "type": "chart", "data_source": "getScoreTrend", "description": "今日の傾向" },
+          { "id": "data_hypothesis", "type": "card", "data_source": "getHypothesis", "description": "原因仮説（断定せず仮説で）" },
+          { "id": "data_actions", "type": "card", "data_source": "getActionSuggestions", "description": "おすすめ行動（1-3個）" }
+        ]
+      }
+    },
+    {
+      "id": "analysis_preview",
+      "path": "/analysis/preview",
+      "name": "AI分析プレビュー（無料用）",
+      "layout_group": "main",
+      "requires_auth": true,
+      "allowed_roles": ["free_user"],
+      "components": {
+        "buttons": [
+          { "id": "btn_upgrade", "label": "詳しく見る（プレミアム）", "action": "課金導線表示", "action_type": "navigation", "target": "/subscription", "expected_result": "課金画面に遷移" },
+          { "id": "btn_d7_free_trial", "label": "1回無料で体験する", "action": "D7無料体験（7日目に1回限り）", "action_type": "navigation", "target": "/analysis", "expected_result": "AI分析を1回無料体験（D7条件付き）", "condition": "user.streak_days >= 7 && !user.free_trial_used" }
+        ],
+        "links": [],
+        "forms": [],
+        "data_displays": [
+          { "id": "data_preview", "type": "card", "data_source": "getAnalysisPreview", "description": "分析のプレビュー（ぼかし表示）" }
+        ]
+      }
+    },
+    {
+      "id": "history",
+      "path": "/history",
+      "name": "履歴",
+      "layout_group": "main",
+      "requires_auth": true,
+      "allowed_roles": ["free_user", "premium_user"],
+      "components": {
+        "buttons": [
+          { "id": "btn_period_7d", "label": "7日", "action": "7日表示切替", "action_type": "client_state", "target": "setPeriod7d", "expected_result": "7日間のデータ表示" },
+          { "id": "btn_period_30d", "label": "30日", "action": "30日表示切替（有料）", "action_type": "client_state", "target": "setPeriod30d", "expected_result": "30日間のデータ表示（有料のみ）" },
+          { "id": "btn_period_90d", "label": "90日", "action": "90日表示切替（有料）", "action_type": "client_state", "target": "setPeriod90d", "expected_result": "90日間のデータ表示（有料のみ）" }
+        ],
+        "links": [],
+        "forms": [],
+        "data_displays": [
+          { "id": "data_score_chart", "type": "chart", "data_source": "getScoreHistory", "description": "スコア推移グラフ" },
+          { "id": "data_hitokoto_list", "type": "table", "data_source": "getHitokotoHistory", "description": "ひとこと記録一覧" }
+        ]
+      }
+    },
+    {
+      "id": "weekly_report",
+      "path": "/report/weekly",
+      "name": "週次レポート",
+      "layout_group": "main",
+      "requires_auth": true,
+      "allowed_roles": ["premium_user"],
+      "components": {
+        "buttons": [],
+        "links": [],
+        "forms": [],
+        "data_displays": [
+          { "id": "data_weekly_summary", "type": "card", "data_source": "getWeeklyReport", "description": "週次の変化言語化" },
+          { "id": "data_weekly_chart", "type": "chart", "data_source": "getWeeklyChart", "description": "週次推移グラフ" }
+        ]
+      }
+    },
+    {
+      "id": "notification_settings",
+      "path": "/settings/notifications",
+      "name": "通知設定",
+      "layout_group": "settings",
+      "requires_auth": true,
+      "allowed_roles": ["free_user", "premium_user"],
+      "components": {
+        "buttons": [
+          { "id": "btn_save_notif", "label": "保存", "action": "通知設定保存", "action_type": "server_action", "target": "saveNotificationSettings", "expected_result": "設定が保存される" }
+        ],
+        "links": [],
+        "forms": [
+          { "id": "form_notif", "name": "通知設定フォーム", "action": "saveNotificationSettings", "fields": ["enabled", "time", "frequency"], "submit_button": "btn_save_notif", "validation": "時刻形式HH:MM、頻度は毎日/週3-4" }
+        ],
+        "data_displays": [
+          { "id": "data_notif_preview", "type": "card", "data_source": "getNotificationPreview", "description": "通知プレビュー例" }
+        ]
+      }
+    },
+    {
+      "id": "subscription",
+      "path": "/subscription",
+      "name": "サブスクリプション",
+      "layout_group": "settings",
+      "requires_auth": true,
+      "allowed_roles": ["free_user", "premium_user"],
+      "components": {
+        "buttons": [
+          { "id": "btn_subscribe_monthly", "label": "月額980円で始める", "action": "月額課金", "action_type": "server_action", "target": "subscribeMontly", "expected_result": "課金処理→プレミアムに昇格" },
+          { "id": "btn_subscribe_yearly", "label": "年額7,800円（お得）", "action": "年額課金", "action_type": "server_action", "target": "subscribeYearly", "expected_result": "課金処理→プレミアムに昇格" }
+        ],
+        "links": [],
+        "forms": [],
+        "data_displays": [
+          { "id": "data_plan_comparison", "type": "card", "data_source": "getPlanComparison", "description": "無料・有料プラン比較表" }
+        ]
+      }
+    },
+    {
+      "id": "profile",
+      "path": "/settings/profile",
+      "name": "プロフィール設定",
+      "layout_group": "settings",
+      "requires_auth": true,
+      "allowed_roles": ["free_user", "premium_user"],
+      "components": {
+        "buttons": [
+          { "id": "btn_save_profile", "label": "保存", "action": "プロフィール保存", "action_type": "server_action", "target": "saveProfile", "expected_result": "プロフィールが更新される" },
+          { "id": "btn_logout", "label": "ログアウト", "action": "ログアウト", "action_type": "server_action", "target": "signOut", "expected_result": "ログアウト→ログイン画面に遷移" }
+        ],
+        "links": [],
+        "forms": [
+          { "id": "form_profile", "name": "プロフィールフォーム", "action": "saveProfile", "fields": ["nickname", "age_group"], "submit_button": "btn_save_profile", "validation": "ニックネーム1-20文字・年代必須" }
+        ],
+        "data_displays": []
+      }
+    }
+  ],
+
+  "flows": [
+    {
+      "id": "flow_onboarding",
+      "role": "guest",
+      "name": "初回オンボーディングフロー",
+      "description": "アプリ初回起動→説明→登録→初回チェックまでの一連の導線",
+      "priority": "critical",
+      "steps": [
+        { "step": 1, "page": "onboarding", "action": "「始める」をタップ", "element": "btn_start", "expected_result": "オンボーディング説明画面に遷移" },
+        { "step": 2, "page": "signup", "action": "メール・パスワード・年代を入力して登録", "element": "form_signup", "expected_result": "アカウント作成成功" },
+        { "step": 3, "page": "home", "action": "ホーム画面が表示される", "element": "btn_start_check", "expected_result": "「今日のチェックを始める」ボタンが目立つ位置に表示" }
+      ],
+      "edge_cases": [
+        { "name": "メール重複", "condition": "既存メールで登録", "expected": "エラーメッセージ表示、ログインリンク提示" }
+      ]
+    },
+    {
+      "id": "flow_daily_check",
+      "role": "free_user",
+      "name": "日次チェックフロー",
+      "description": "ホーム→チェック開始→3テスト→結果表示→ひとこと記録の一連の導線",
+      "priority": "critical",
+      "steps": [
+        { "step": 1, "page": "home", "action": "「今日のチェックを始める」をタップ", "element": "btn_start_check", "expected_result": "チェック画面に遷移" },
+        { "step": 2, "page": "check", "action": "反応速度テスト実行（5-7試行）", "element": "btn_reaction", "expected_result": "テスト完了、次のテストへ自動遷移" },
+        { "step": 3, "page": "check", "action": "短期記憶テスト実行", "element": "btn_memory", "expected_result": "テスト完了、次のテストへ自動遷移" },
+        { "step": 4, "page": "check", "action": "注意切替テスト実行（30-45秒）", "element": "btn_attention", "expected_result": "テスト完了、結果画面へ遷移" },
+        { "step": 5, "page": "check_result", "action": "結果確認：総合スコア・サブスコア・前日比", "element": "data_total_score", "expected_result": "スコアが表示される" },
+        { "step": 6, "page": "check_result", "action": "ひとこと記録（睡眠・気分・忙しさ）", "element": "btn_hitokoto_result", "expected_result": "記録モーダルが開き、1タップで記録できる" }
+      ],
+      "edge_cases": [
+        { "name": "テスト中断", "condition": "アプリがバックグラウンドに移動", "expected": "テストが一時停止し、復帰時に再開" },
+        { "name": "2回目のチェック", "condition": "同日に2回目のチェックを実施", "expected": "2回目の結果が記録され、今日の最高スコアを表示" }
+      ]
+    },
+    {
+      "id": "flow_premium_analysis",
+      "role": "premium_user",
+      "name": "有料AI分析フロー",
+      "description": "チェック結果→AI分析→AIトークの一連の導線",
+      "priority": "high",
+      "steps": [
+        { "step": 1, "page": "check_result", "action": "「詳しく見る」をタップ", "element": "btn_to_analysis", "expected_result": "AI分析画面に遷移" },
+        { "step": 2, "page": "analysis", "action": "今日の傾向・原因仮説・行動提案を確認", "element": "data_hypothesis", "expected_result": "断定せず仮説で表示される" },
+        { "step": 3, "page": "ai_talk", "action": "AIトークで対話", "element": "form_chat", "expected_result": "1-3往復の対話が行われる" }
+      ],
+      "edge_cases": [
+        { "name": "データ不足", "condition": "初日の分析", "expected": "「まだデータが少ないですが」と前置きして仮説を提示" }
+      ]
+    },
+    {
+      "id": "flow_free_to_premium",
+      "role": "free_user",
+      "name": "無料→有料アップグレードフロー",
+      "description": "無料ユーザーがAI分析プレビューから課金画面に遷移する導線",
+      "priority": "high",
+      "steps": [
+        { "step": 1, "page": "check_result", "action": "「詳しく見る」をタップ", "element": "btn_to_analysis", "expected_result": "プレビュー画面に遷移" },
+        { "step": 2, "page": "analysis_preview", "action": "プレビュー（ぼかし）を確認", "element": "data_preview", "expected_result": "分析のぼかしプレビューが表示される" },
+        { "step": 3, "page": "analysis_preview", "action": "「詳しく見る（プレミアム）」をタップ", "element": "btn_upgrade", "expected_result": "課金画面に遷移" },
+        { "step": 4, "page": "subscription", "action": "月額 or 年額を選択", "element": "btn_subscribe_monthly", "expected_result": "課金処理完了→プレミアムに昇格" }
+      ],
+      "edge_cases": []
+    },
+    {
+      "id": "flow_notification_setup",
+      "role": "free_user",
+      "name": "通知設定フロー",
+      "description": "通知のON/OFF・時刻設定",
+      "priority": "medium",
+      "steps": [
+        { "step": 1, "page": "notification_settings", "action": "通知ON/OFF切替", "element": "form_notif", "expected_result": "通知設定が切り替わる" },
+        { "step": 2, "page": "notification_settings", "action": "時刻・頻度設定", "element": "form_notif", "expected_result": "設定が保存される" }
+      ],
+      "edge_cases": [
+        { "name": "通知権限拒否", "condition": "OSレベルで通知権限が拒否されている", "expected": "設定画面へのリンクを提示" }
+      ]
+    }
+  ],
+
+  "cross_role_interactions": [
+    {
+      "id": "xrole_upgrade",
+      "name": "無料→有料アップグレード",
+      "description": "無料ユーザーが課金すると、有料機能が即座に利用可能になる",
+      "initiator_role": "free_user",
+      "affected_roles": ["premium_user"],
+      "flow_steps": [
+        { "role": "free_user", "action": "課金ボタンをタップして支払い完了", "flow_ref": "flow_free_to_premium" },
+        { "role": "premium_user", "expected": "AI分析・AIトーク・週次レポートが即座に利用可能", "flow_ref": "flow_premium_analysis" }
+      ]
+    }
+  ],
+
+  "test_matrix": {
+    "description": "ロールごとの並走テスト割り当て",
+    "agents": [
+      {
+        "agent_id": "agent_free",
+        "role": "free_user",
+        "assigned_flows": ["flow_daily_check", "flow_free_to_premium", "flow_notification_setup"],
+        "assigned_pages": ["home", "check", "check_result", "analysis_preview", "history", "notification_settings", "subscription", "profile"],
+        "focus": "無料ユーザーの日次チェック導線と課金導線の検証"
+      },
+      {
+        "agent_id": "agent_premium",
+        "role": "premium_user",
+        "assigned_flows": ["flow_premium_analysis"],
+        "assigned_pages": ["home", "check", "check_result", "ai_talk", "analysis", "history", "weekly_report", "notification_settings", "profile"],
+        "focus": "有料ユーザーのAI分析・AIトーク・週次レポートの検証"
+      },
+      {
+        "agent_id": "agent_guest",
+        "role": "guest",
+        "assigned_flows": ["flow_onboarding"],
+        "assigned_pages": ["onboarding", "signup", "login"],
+        "focus": "初回体験（オンボーディング→登録→初回チェック）の検証"
+      }
+    ],
+    "cross_role_agent": {
+      "agent_id": "agent_cross",
+      "focus": "無料→有料アップグレードの即時反映と権限切替の検証",
+      "assigned_interactions": ["xrole_upgrade"]
+    }
+  },
+
+  "design_constraints": {
+    "color_rules": {
+      "score_decrease": "中立色（グレー系）で表示。赤色・下矢印アイコン禁止",
+      "score_increase": "緑色許可だが控えめに。大げさな演出禁止",
+      "contrast_ratio": "WCAG AA 4.5:1以上必須"
+    },
+    "interaction_rules": {
+      "check_timer": "非表示（焦り防止）",
+      "check_retry": "やり直しボタン無効化（迷い防止）",
+      "transition_speed": "0.2秒以内",
+      "tap_target": "最低44x44pt",
+      "font_size": "最低17px"
+    },
+    "ai_expression_rules": {
+      "rule_1": "断言しない（仮説・提案形式）",
+      "rule_2": "他者比較しない",
+      "rule_3": "行動を提案する",
+      "prohibited_words": ["認知症", "リスク", "診断", "MCI", "治療", "障害"],
+      "pmda_safe_line": "コンディション表示・変化要約・行動提案のみ"
+    },
+    "onboarding_rule": "初回チェック完了まで3タップ以内"
+  },
+
+  "playwright_config": {
+    "base_url": "http://localhost:3001",
+    "auth_setup": "tests/e2e/auth.setup.ts",
+    "output_dir": "tests/e2e",
+    "timeouts": {
+      "navigation": 10000,
+      "action": 5000,
+      "assertion": 5000
+    },
+    "responsive_breakpoints": [375, 768, 1280],
+    "test_categories": ["pages", "flows", "cross_role", "responsive"],
+    "docker": {
+      "compose_file": "~/.claude/docker/playwright/docker-compose.yml",
+      "service": "playwright-tester",
+      "results_dir": "~/.claude/gates/cognitive-condition-ai"
+    }
+  }
+}
