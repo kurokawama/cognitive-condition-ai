@@ -1,0 +1,193 @@
+{
+  "project": "認知コンディション AI",
+  "generated_from": "flow-diagram.json",
+  "generated_at": "2026-03-14T05:36:19.817Z",
+  "base_url": "http://localhost:3001",
+  "auth_accounts": {
+    "user": {
+      "email": "free@test.example.com",
+      "name": "一般ユーザー（無料）"
+    },
+    "user_premium": {
+      "email": "premium@test.example.com",
+      "name": "一般ユーザー（有料）"
+    },
+    "org_admin": {
+      "email": "admin@corp.example.com",
+      "name": "法人管理者"
+    }
+  },
+  "test_suites": [
+    {
+      "type": "page",
+      "file": "tests/e2e/pages/landing.spec.ts",
+      "id": "landing"
+    },
+    {
+      "type": "page",
+      "file": "tests/e2e/pages/onboarding.spec.ts",
+      "id": "onboarding"
+    },
+    {
+      "type": "page",
+      "file": "tests/e2e/pages/auth_login.spec.ts",
+      "id": "auth_login"
+    },
+    {
+      "type": "page",
+      "file": "tests/e2e/pages/auth_signup.spec.ts",
+      "id": "auth_signup"
+    },
+    {
+      "type": "page",
+      "file": "tests/e2e/pages/auth_forgot_password.spec.ts",
+      "id": "auth_forgot_password"
+    },
+    {
+      "type": "page",
+      "file": "tests/e2e/pages/home.spec.ts",
+      "id": "home"
+    },
+    {
+      "type": "page",
+      "file": "tests/e2e/pages/check.spec.ts",
+      "id": "check"
+    },
+    {
+      "type": "page",
+      "file": "tests/e2e/pages/result.spec.ts",
+      "id": "result"
+    },
+    {
+      "type": "page",
+      "file": "tests/e2e/pages/history.spec.ts",
+      "id": "history"
+    },
+    {
+      "type": "page",
+      "file": "tests/e2e/pages/ai_analysis.spec.ts",
+      "id": "ai_analysis"
+    },
+    {
+      "type": "page",
+      "file": "tests/e2e/pages/ai_talk.spec.ts",
+      "id": "ai_talk"
+    },
+    {
+      "type": "page",
+      "file": "tests/e2e/pages/note.spec.ts",
+      "id": "note"
+    },
+    {
+      "type": "page",
+      "file": "tests/e2e/pages/subscription.spec.ts",
+      "id": "subscription"
+    },
+    {
+      "type": "page",
+      "file": "tests/e2e/pages/settings.spec.ts",
+      "id": "settings"
+    },
+    {
+      "type": "page",
+      "file": "tests/e2e/pages/terms.spec.ts",
+      "id": "terms"
+    },
+    {
+      "type": "page",
+      "file": "tests/e2e/pages/admin_dashboard.spec.ts",
+      "id": "admin_dashboard"
+    },
+    {
+      "type": "page",
+      "file": "tests/e2e/pages/admin_members.spec.ts",
+      "id": "admin_members"
+    },
+    {
+      "type": "page",
+      "file": "tests/e2e/pages/admin_reports.spec.ts",
+      "id": "admin_reports"
+    },
+    {
+      "type": "flow",
+      "file": "tests/e2e/flows/flow_first_registration.spec.ts",
+      "id": "flow_first_registration",
+      "priority": "critical"
+    },
+    {
+      "type": "flow",
+      "file": "tests/e2e/flows/flow_daily_check.spec.ts",
+      "id": "flow_daily_check",
+      "priority": "critical"
+    },
+    {
+      "type": "flow",
+      "file": "tests/e2e/flows/flow_d7_free_trial.spec.ts",
+      "id": "flow_d7_free_trial",
+      "priority": "critical"
+    },
+    {
+      "type": "flow",
+      "file": "tests/e2e/flows/flow_login.spec.ts",
+      "id": "flow_login",
+      "priority": "critical"
+    },
+    {
+      "type": "flow",
+      "file": "tests/e2e/flows/flow_subscription.spec.ts",
+      "id": "flow_subscription",
+      "priority": "high"
+    },
+    {
+      "type": "flow",
+      "file": "tests/e2e/flows/flow_ai_talk.spec.ts",
+      "id": "flow_ai_talk",
+      "priority": "high"
+    },
+    {
+      "type": "flow",
+      "file": "tests/e2e/flows/flow_premium_analysis.spec.ts",
+      "id": "flow_premium_analysis",
+      "priority": "high"
+    },
+    {
+      "type": "flow",
+      "file": "tests/e2e/flows/flow_history.spec.ts",
+      "id": "flow_history",
+      "priority": "medium"
+    },
+    {
+      "type": "flow",
+      "file": "tests/e2e/flows/flow_settings.spec.ts",
+      "id": "flow_settings",
+      "priority": "medium"
+    },
+    {
+      "type": "cross_role",
+      "file": "tests/e2e/cross-role/xrole_upgrade.spec.ts",
+      "id": "xrole_upgrade"
+    },
+    {
+      "type": "cross_role",
+      "file": "tests/e2e/cross-role/xrole_downgrade.spec.ts",
+      "id": "xrole_downgrade"
+    },
+    {
+      "type": "cross_role",
+      "file": "tests/e2e/cross-role/xrole_org_onboard.spec.ts",
+      "id": "xrole_org_onboard"
+    }
+  ],
+  "timeouts": {
+    "navigation": 10000,
+    "action": 5000,
+    "assertion": 5000
+  },
+  "stats": {
+    "total_tests": 233,
+    "total_files": 32,
+    "pages": 18,
+    "flows": 9,
+    "cross_role": 3
+  }
+}

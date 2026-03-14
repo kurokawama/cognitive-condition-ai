@@ -1,10 +1,10 @@
 node_modules/
 .next/
+out/
 .env
 .env.local
 .env.production
-dist/
-.turbo/
-*.tsbuildinfo
 .DS_Store
-Thumbs.db
+*.tsbuildinfo
+next-env.d.ts
+test-results/
