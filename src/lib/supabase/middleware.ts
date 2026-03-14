@@ -4,6 +4,18 @@ import { NextResponse, type NextRequest } from "next/server";
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
+  // Skip auth when Supabase is not configured
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    const pathname = request.nextUrl.pathname;
+    const publicPaths = ["/", "/login", "/register", "/terms"];
+    if (publicPaths.some((p) => pathname === p)) {
+      return supabaseResponse;
+    }
+    const url = request.nextUrl.clone();
+    url.pathname = "/login";
+    return NextResponse.redirect(url);
+  }
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -32,7 +44,7 @@ export async function updateSession(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // Public paths — no auth required
-  const publicPaths = ["/", "/auth/login", "/auth/register", "/terms"];
+  const publicPaths = ["/", "/login", "/register", "/terms"];
   if (publicPaths.some((p) => pathname === p)) {
     return supabaseResponse;
   }
@@ -40,7 +52,7 @@ export async function updateSession(request: NextRequest) {
   // Protected paths — redirect to login if no user
   if (!user && pathname.startsWith("/")) {
     const url = request.nextUrl.clone();
-    url.pathname = "/auth/login";
+    url.pathname = "/login";
     return NextResponse.redirect(url);
   }
 

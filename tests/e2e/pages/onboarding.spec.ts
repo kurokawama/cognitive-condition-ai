@@ -22,7 +22,7 @@ test.describe('初回オンボーディング (/onboarding)', () => {
 
   test('button: 次へ（1/3） — Step 1: 60秒チェックの説明確認', async ({ page }) => {
     await page.goto('/onboarding');
-    const btn = page.getByRole('button', { name: /次へ（1/3）/ });
+    const btn = page.getByRole('button', { name: /次へ（1\/3）/ });
     await expect(btn).toBeVisible();
     await btn.click();
     // Expected: Step 2に進む
@@ -32,7 +32,7 @@ test.describe('初回オンボーディング (/onboarding)', () => {
 
   test('button: 次へ（2/3） — Step 2: AIコーチングの説明確認', async ({ page }) => {
     await page.goto('/onboarding');
-    const btn = page.getByRole('button', { name: /次へ（2/3）/ });
+    const btn = page.getByRole('button', { name: /次へ（2\/3）/ });
     await expect(btn).toBeVisible();
     await btn.click();
     // Expected: Step 3に進む
@@ -42,7 +42,7 @@ test.describe('初回オンボーディング (/onboarding)', () => {
 
   test('button: さっそく始める（3/3） — Step 3: オンボーディング完了、ホームに遷移', async ({ page }) => {
     await page.goto('/onboarding');
-    const btn = page.getByRole('button', { name: /さっそく始める（3/3）/ });
+    const btn = page.getByRole('button', { name: /さっそく始める（3\/3）/ });
     await expect(btn).toBeVisible();
     await btn.click();
     await expect(page).toHaveURL('/home');
