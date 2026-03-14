@@ -118,7 +118,7 @@ export function MemoryTest({ onComplete }: MemoryTestProps) {
               autoComplete="off"
               value={inputValue}
               onChange={(event) => setInputValue(event.target.value)}
-              disabled={phase !== "input" || phase === "completed"}
+              disabled={phase !== "input"}
               maxLength={8}
               className="w-full rounded-lg border border-slate-300 px-4 py-3 text-lg text-slate-800 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100 disabled:bg-slate-100"
             />

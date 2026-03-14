@@ -78,7 +78,7 @@ export default function NotePage() {
     setIsSaving(false);
 
     if ("error" in result) {
-      setError(result.error);
+      setError(result.error ?? "保存に失敗しました");
       return;
     }
 
