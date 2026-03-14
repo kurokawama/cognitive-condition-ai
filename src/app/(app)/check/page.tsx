@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { saveCheckResult } from "@/app/actions/check";
 import { AttentionTest } from "@/components/check/attention-test";
 import { MemoryTest } from "@/components/check/memory-test";
@@ -14,7 +14,7 @@ const TEST_LABELS = ["反応速度", "短期記憶", "注意切替"] as const;
 
 export default function CheckPage() {
   const router = useRouter();
-  const startedAtRef = useRef(Date.now());
+  const startedAtRef = useRef(0);
   const reactionTrialsRef = useRef<ReactionTrial[]>([]);
   const memoryTrialsRef = useRef<MemoryTrial[]>([]);
 
@@ -22,6 +22,10 @@ export default function CheckPage() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    startedAtRef.current = Date.now();
+  }, []);
 
   const progressText = `${currentTestIndex + 1}/3`;
 
