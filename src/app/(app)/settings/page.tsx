@@ -11,7 +11,7 @@ export default async function SettingsPage() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/auth/login");
+    redirect("/login");
   }
 
   const displayName = profile?.display_name ?? user.user_metadata?.display_name ?? "未設定";
@@ -24,7 +24,7 @@ export default async function SettingsPage() {
   async function logoutAndRedirect() {
     "use server";
     await logout();
-    redirect("/auth/login");
+    redirect("/login");
   }
 
   return (

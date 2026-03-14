@@ -30,13 +30,13 @@ export default function LandingPage() {
 
         <div className="flex w-full max-w-md flex-col gap-4">
           <Link
-            href="/auth/register"
+            href="/register"
             className="flex min-h-12 items-center justify-center rounded-xl bg-primary px-6 py-4 text-lg font-semibold text-white shadow-sm transition-colors hover:bg-primary-hover"
           >
             無料で始める
           </Link>
           <Link
-            href="/auth/login"
+            href="/login"
             className="flex min-h-12 items-center justify-center rounded-xl border-2 border-primary px-6 py-4 text-lg font-semibold text-primary transition-colors hover:bg-primary/5"
           >
             ログイン

@@ -119,7 +119,7 @@ export function LoginForm() {
 
       <div className="pt-1 text-center">
         <Link
-          href="/auth/register"
+          href="/register"
           className="inline-flex items-center justify-center px-3 py-2 text-lg font-medium text-primary underline-offset-4 hover:underline"
         >
           新規登録はこちら
