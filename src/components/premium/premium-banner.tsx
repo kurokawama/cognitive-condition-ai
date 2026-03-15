@@ -6,30 +6,26 @@ interface PremiumBannerProps {
   variant: BannerVariant;
 }
 
-const VARIANTS: Record<BannerVariant, { icon: string; title: string; description: string; cta: string }> = {
+const VARIANTS: Record<BannerVariant, { icon: string; title: string; description: string }> = {
   home: {
     icon: "\u2728",
-    title: "AIがあなたの傾向を分析",
-    description: "7日間のデータからAIが仮説と改善提案をお届けします",
-    cta: "プレミアムを見る",
+    title: "AIがスコアの傾向を読み解きます",
+    description: "7日間の変化からAIが気づきをまとめます",
   },
   result: {
     icon: "\uD83D\uDCAC",
-    title: "AIにもっと詳しく相談",
-    description: "スコアの背景や改善のヒントをAIが一緒に考えます",
-    cta: "AI分析を体験する",
+    title: "今日のスコア、AIならもっと深く読み解けます",
+    description: "改善のヒントをAIが一緒に考えます",
   },
   history: {
     icon: "\uD83D\uDCC8",
-    title: "90日間の長期トレンド",
-    description: "長期的な変化のパターンを把握して日々の習慣に活かせます",
-    cta: "長期トレンドを見る",
+    title: "3ヶ月分の変化、見てみませんか？",
+    description: "長期的なパターンが見えてきます",
   },
   settings: {
     icon: "\uD83D\uDCC1",
-    title: "データエクスポート & AI分析",
-    description: "プレミアムならCSV出力やAI詳細分析が使い放題",
-    cta: "プレミアムを見る",
+    title: "もっと詳しく知りたい方へ",
+    description: "AI分析・AIトーク・90日トレンド・CSV出力",
   },
 };
 
@@ -39,18 +35,21 @@ export function PremiumBanner({ variant }: PremiumBannerProps) {
   return (
     <Link
       href="/subscription"
-      className="block rounded-xl border border-sky-100 bg-gradient-to-r from-sky-50 to-white p-4 shadow-sm transition active:scale-[0.99] hover:shadow-md"
+      className="block overflow-hidden rounded-2xl border-2 border-sky-300 bg-gradient-to-r from-sky-50 via-white to-green-50 p-5 shadow-md transition active:scale-[0.98] hover:shadow-lg"
     >
-      <div className="flex items-start gap-3">
-        <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sky-100 text-lg">
+      <div className="flex items-center gap-4">
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-sky-100 text-2xl">
           {v.icon}
         </span>
         <div className="flex-1">
-          <p className="text-lg font-semibold text-slate-800">{v.title}</p>
+          <p className="text-lg font-bold text-slate-800">{v.title}</p>
           <p className="mt-0.5 text-base text-slate-500">{v.description}</p>
         </div>
-        <span className="mt-1 shrink-0 rounded-full bg-sky-500 px-3 py-1.5 text-sm font-semibold text-white">
-          {v.cta}
+      </div>
+      <div className="mt-3 flex items-center justify-between">
+        <span className="text-base font-semibold text-sky-600">7日間無料で試す</span>
+        <span className="inline-flex min-h-10 items-center rounded-full bg-sky-500 px-5 py-2 text-base font-semibold text-white shadow-sm">
+          詳しく見る →
         </span>
       </div>
     </Link>

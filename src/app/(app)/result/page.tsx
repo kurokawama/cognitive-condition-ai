@@ -201,22 +201,22 @@ export default async function ResultPage() {
         </div>
       </section>
 
-      {!premiumUser && <PremiumBanner variant="result" />}
-
       <div className="space-y-3">
         <Link
           href="/ai-analysis"
-          className="block min-h-14 w-full rounded-xl bg-gradient-to-r from-sky-500 to-green-500 py-4 text-center text-lg font-semibold text-white shadow-md transition hover:shadow-lg"
+          className="block min-h-14 w-full rounded-xl bg-gradient-to-r from-sky-500 to-green-500 py-4 text-center text-lg font-semibold text-white shadow-md transition hover:shadow-lg active:scale-[0.98]"
         >
           AI分析を見る
         </Link>
         <Link
           href="/note"
-          className="block min-h-14 w-full rounded-xl border-2 border-sky-500 bg-white py-4 text-center text-lg font-semibold text-sky-500"
+          className="block min-h-12 w-full py-3 text-center text-lg font-medium text-sky-600 transition hover:text-sky-700"
         >
           ひとこと記録する
         </Link>
       </div>
+
+      {!premiumUser && <PremiumBanner variant="result" />}
     </div>
   );
 }

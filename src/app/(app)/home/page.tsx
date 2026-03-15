@@ -85,10 +85,32 @@ export default async function HomePage() {
   return (
     <div className="mx-auto w-full max-w-[28rem] space-y-5 bg-slate-50 p-5">
       <header className="rounded-3xl bg-white p-5 shadow-sm">
-        <h1 className="text-2xl font-bold text-slate-800">
-          {getGreeting()}、{displayName}さん
-        </h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-slate-800">
+            {getGreeting()}、{displayName}さん
+          </h1>
+          <span className="rounded-full bg-amber-100 px-3 py-1 text-base font-semibold text-amber-900">
+            🔥 {streakDays}日連続
+          </span>
+        </div>
       </header>
+
+      {completedToday ? (
+        <button
+          type="button"
+          disabled
+          className="min-h-14 w-full rounded-xl bg-slate-200 py-4 text-lg font-semibold text-slate-500"
+        >
+          今日のチェックは完了です ✓
+        </button>
+      ) : (
+        <Link
+          href="/check"
+          className="block min-h-14 w-full rounded-xl bg-gradient-to-r from-sky-500 to-green-500 py-4 text-center text-lg font-semibold text-white shadow-md transition hover:shadow-lg active:scale-[0.98]"
+        >
+          今日のチェックを始める
+        </Link>
+      )}
 
       <section className="rounded-3xl bg-white p-6 shadow-[0_8px_30px_rgba(14,165,233,0.08)]">
         <div className="flex justify-center">
@@ -109,15 +131,20 @@ export default async function HomePage() {
             {isImproved ? `→ +${diff}` : "→ 変化なし"}
           </span>
         </div>
-      </section>
-
-      <section className="rounded-xl bg-amber-100 p-4 shadow-sm">
-        <p className="flex items-center gap-2 text-lg font-semibold text-amber-900">
-          <span aria-hidden className="text-amber-500">
-            🔥
-          </span>
-          <span>{streakDays}日連続</span>
-        </p>
+        <div className="mt-4 grid grid-cols-3 gap-3">
+          <div className="rounded-xl bg-slate-50 p-3 text-center">
+            <p className="text-base text-slate-500">平均</p>
+            <p className="text-2xl font-bold text-slate-800">{averageScore}</p>
+          </div>
+          <div className="rounded-xl bg-slate-50 p-3 text-center">
+            <p className="text-base text-slate-500">回数</p>
+            <p className="text-2xl font-bold text-slate-800">{checkCount}</p>
+          </div>
+          <div className="rounded-xl bg-slate-50 p-3 text-center">
+            <p className="text-base text-slate-500">最高</p>
+            <p className="text-2xl font-bold text-slate-800">{highestScore}</p>
+          </div>
+        </div>
       </section>
 
       <section className="rounded-xl bg-white p-5 shadow-sm">
@@ -135,39 +162,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="grid grid-cols-3 gap-3">
-        <article className="rounded-xl bg-white p-3 text-center shadow-sm">
-          <p className="text-base text-slate-500">AVG</p>
-          <p className="text-2xl font-bold text-slate-800">{averageScore}</p>
-        </article>
-        <article className="rounded-xl bg-white p-3 text-center shadow-sm">
-          <p className="text-base text-slate-500">DAYS</p>
-          <p className="text-2xl font-bold text-slate-800">{checkCount}</p>
-        </article>
-        <article className="rounded-xl bg-white p-3 text-center shadow-sm">
-          <p className="text-base text-slate-500">BEST</p>
-          <p className="text-2xl font-bold text-slate-800">{highestScore}</p>
-        </article>
-      </section>
-
       {!premiumUser && <PremiumBanner variant="home" />}
-
-      {completedToday ? (
-        <button
-          type="button"
-          disabled
-          className="min-h-14 w-full rounded-xl bg-slate-200 py-4 text-lg font-semibold text-slate-500"
-        >
-          今日のチェックは完了です ✓
-        </button>
-      ) : (
-        <Link
-          href="/check"
-          className="block min-h-14 w-full animate-pulse rounded-xl bg-gradient-to-r from-sky-500 to-green-500 py-4 text-center text-lg font-semibold text-white shadow-md transition hover:shadow-lg"
-        >
-          今日のチェックを始める
-        </Link>
-      )}
     </div>
   );
 }

@@ -151,15 +151,15 @@ export default function AiAnalysisPage() {
             </div>
 
             {isPremiumPreview && (
-              <button
-                type="button"
-                onClick={() => setShowPremiumInfo(true)}
-                className="absolute inset-0 flex items-center justify-center rounded-xl bg-white/65 backdrop-blur-sm transition active:bg-white/75"
+              <Link
+                href="/subscription"
+                className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-xl bg-white/70 backdrop-blur-sm transition active:bg-white/80"
               >
-                <span className="rounded-full bg-sky-500 px-6 py-3 text-lg font-semibold text-white shadow-sm transition hover:bg-sky-600 active:scale-95">
-                  タップしてプレミアムを見る
+                <span className="rounded-full bg-sky-500 px-6 py-3 text-lg font-semibold text-white shadow-md transition hover:bg-sky-600 active:scale-95">
+                  7日間無料で全機能を試す
                 </span>
-              </button>
+                <span className="text-base font-medium text-slate-600">月額580円 / 年額なら1日13円</span>
+              </Link>
             )}
           </div>
 
@@ -270,6 +270,32 @@ export default function AiAnalysisPage() {
               </p>
             </div>
           </section>
+        )}
+        {isPremiumPreview && (
+          <div className="overflow-hidden rounded-2xl border-2 border-sky-300 bg-gradient-to-r from-sky-50 via-white to-green-50 p-5 shadow-md">
+            <h3 className="text-xl font-bold text-slate-800">プレミアムでできること</h3>
+            <ul className="mt-3 space-y-2">
+              {[
+                { icon: "\uD83D\uDCCA", text: "AIが7日間のデータから傾向を分析" },
+                { icon: "\uD83D\uDCAC", text: "AIトークで毎日何度でも相談" },
+                { icon: "\uD83D\uDCC8", text: "90日間の長期トレンドを追跡" },
+              ].map((item) => (
+                <li key={item.text} className="flex items-center gap-3 text-lg text-slate-700">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sky-100 text-base">
+                    {item.icon}
+                  </span>
+                  {item.text}
+                </li>
+              ))}
+            </ul>
+            <Link
+              href="/subscription"
+              className="mt-4 flex min-h-12 w-full items-center justify-center rounded-xl bg-sky-500 px-6 py-3 text-lg font-semibold text-white shadow-sm transition hover:bg-sky-600 active:scale-[0.98]"
+            >
+              7日間無料で試す — 月額580円
+            </Link>
+            <p className="mt-2 text-center text-base text-slate-400">年額プランなら1日たった13円</p>
+          </div>
         )}
       </div>
     </div>
