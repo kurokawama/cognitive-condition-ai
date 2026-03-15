@@ -235,7 +235,7 @@ export default function SubscriptionPage() {
             >
               <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-lg font-semibold text-slate-800">
                 {faq.q}
-                <span className="text-slate-500 transition group-open:rotate-180">⌃</span>
+                <span className="text-slate-500 transition group-open:rotate-45">＋</span>
               </summary>
               <p className="pt-2 text-base text-slate-600">{faq.a}</p>
             </details>
