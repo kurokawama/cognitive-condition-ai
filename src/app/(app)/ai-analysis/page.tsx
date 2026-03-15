@@ -93,69 +93,83 @@ export default function AiAnalysisPage() {
   const suggestions = analysis?.suggestions ?? PREVIEW_SUGGESTIONS;
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6 p-6">
-      <h1 className="text-2xl font-bold text-slate-800">AIが分析しました</h1>
+    <div className="bg-slate-50">
+      <div className="mx-auto max-w-4xl space-y-6 px-4 pb-8 pt-6 sm:px-6">
+        <header className="rounded-2xl border border-sky-100 bg-gradient-to-r from-sky-50 to-white p-6 shadow-[0_8px_30px_rgba(14,165,233,0.08)]">
+          <h1 className="text-2xl font-bold text-slate-800 md:text-3xl">AIが分析しました</h1>
+          <p className="mt-2 text-lg text-slate-600">{summaryText}</p>
+        </header>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <h2 className="text-xl font-semibold text-slate-800">7日間のスコア推移</h2>
-        <div className="mt-4">
-          {isLoading ? (
-            <div className="h-[200px] animate-pulse rounded-xl bg-slate-100" />
-          ) : (
-            <ScoreChart data={chartData} mode="analysis" height={200} />
-          )}
-        </div>
-      </section>
+        <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="text-xl font-semibold text-slate-800">7日間のスコア推移</h2>
+            <span className="rounded-full bg-sky-100 px-3 py-1 text-base font-semibold text-sky-700">
+              7日間
+            </span>
+          </div>
+          <div className="mt-4 rounded-xl bg-slate-50 p-3">
+            {isLoading ? (
+              <div className="h-[220px] animate-pulse rounded-xl bg-slate-100" />
+            ) : (
+              <ScoreChart data={chartData} mode="analysis" height={220} />
+            )}
+          </div>
+        </section>
 
-      <section className="relative rounded-xl border border-slate-200 bg-slate-50 p-4">
-        <div className="space-y-4">
-          <article className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+        <section className="space-y-4">
+          <article className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
             <h2 className="text-xl font-semibold text-slate-800">傾向サマリ</h2>
-            <p className="mt-2 text-lg text-slate-700">{summaryText}</p>
+            <p className="mt-2 text-lg leading-relaxed text-slate-700">{summaryText}</p>
           </article>
 
-          <div className="space-y-3">
-            <h2 className="text-xl font-semibold text-slate-800">仮説</h2>
-            {hypothesisTexts.map((hypothesis, index) => (
-              <HypothesisCard key={`${hypothesis}-${index}`} text={hypothesis} />
-            ))}
-          </div>
+          <div className="relative overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
+            <div className={isPremiumPreview ? "select-none blur-[2px]" : ""}>
+              <div className="space-y-3">
+                <h2 className="text-xl font-semibold text-slate-800">仮説</h2>
+                {hypothesisTexts.map((hypothesis, index) => (
+                  <HypothesisCard key={`${hypothesis}-${index}`} text={hypothesis} />
+                ))}
+              </div>
 
-          <div className="space-y-3">
-            <h2 className="text-xl font-semibold text-slate-800">アクション提案</h2>
-            {suggestions.map((suggestion, index) => (
-              <AnalysisCard
-                key={`${suggestion.title}-${index}`}
-                title={suggestion.title}
-                description={suggestion.description}
-                category={suggestion.category}
-              />
-            ))}
-          </div>
-        </div>
+              <div className="mt-5 space-y-3">
+                <h2 className="text-xl font-semibold text-slate-800">アクション提案</h2>
+                <div className="grid gap-3 md:grid-cols-3">
+                  {suggestions.map((suggestion, index) => (
+                    <AnalysisCard
+                      key={`${suggestion.title}-${index}`}
+                      title={suggestion.title}
+                      description={suggestion.description}
+                      category={suggestion.category}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
 
-        {isPremiumPreview && (
-          <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-white/60 backdrop-blur-sm">
-            <p className="rounded-full bg-sky-500 px-6 py-3 text-lg font-semibold text-white shadow-sm">
-              プレミアムで全て見る
-            </p>
+            {isPremiumPreview && (
+              <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-white/65 backdrop-blur-sm">
+                <p className="rounded-full bg-sky-500 px-6 py-3 text-lg font-semibold text-white shadow-sm">
+                  プレミアムで全て見る
+                </p>
+              </div>
+            )}
           </div>
+        </section>
+
+        {!isPremiumPreview && error && (
+          <p className="rounded-xl border border-amber-300 bg-amber-50 p-4 text-lg text-slate-700">
+            {error}
+          </p>
         )}
-      </section>
 
-      {!isPremiumPreview && error && (
-        <p className="rounded-xl border border-amber-300 bg-amber-50 p-4 text-lg text-slate-700">
-          {error}
-        </p>
-      )}
-
-      <button
-        type="button"
-        onClick={() => window.alert("AIトーク機能は準備中です")}
-        className="w-full rounded-xl bg-sky-500 py-4 text-lg font-semibold text-white shadow-sm transition hover:bg-sky-600"
-      >
-        AIトークで詳しく聞く
-      </button>
+        <button
+          type="button"
+          onClick={() => window.alert("AIトーク機能は準備中です")}
+          className="flex min-h-12 w-full items-center justify-center rounded-xl bg-green-800 px-6 py-4 text-lg font-semibold text-white shadow-sm transition hover:bg-green-900"
+        >
+          AIトークで詳しく聞く
+        </button>
+      </div>
     </div>
   );
 }
