@@ -23,9 +23,10 @@ export function getSubscriptionLabel(plan: SubscriptionPlan): string {
   return plan === "premium" ? "プレミアム" : "無料プラン";
 }
 
-// Phase 1: Mock pricing
+// v3 B2C pricing: ¥580/month, ¥4,800/year
 export const PRICING = {
-  monthly: 980,
-  yearly: 7800,
-  yearlySavings: 3920, // 980*12 - 7800
+  monthly: 580,
+  yearly: 4800,
+  yearlySavings: 2160, // 580*12 - 4800
+  dailyCost: 13, // 4800/365
 } as const;

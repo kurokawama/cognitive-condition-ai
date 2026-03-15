@@ -70,19 +70,11 @@ export async function saveCheckResult(input: z.infer<typeof scoreSchema>) {
     aiComment = "お疲れさまでした！";
   }
 
-  // Get user profile for org_id
-  const { data: profile } = await supabase
-    .from("users")
-    .select("org_id")
-    .eq("id", user.id)
-    .single();
-
   // Save check session
   const { data: session, error } = await supabase
     .from("check_sessions")
     .insert({
       user_id: user.id,
-      org_id: profile?.org_id || null,
       score_total: parsed.data.scoreTotal,
       score_reaction: parsed.data.scoreReaction,
       score_memory: parsed.data.scoreMemory,

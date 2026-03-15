@@ -1,14 +1,23 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+const PUBLIC_PATHS = ["/", "/login", "/terms", "/check-demo", "/about", "/subscription"];
+const PUBLIC_PREFIXES = ["/blog"];
+
+function isPublicPath(pathname: string): boolean {
+  return (
+    PUBLIC_PATHS.some((p) => pathname === p) ||
+    PUBLIC_PREFIXES.some((p) => pathname.startsWith(p))
+  );
+}
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
   // Skip auth when Supabase is not configured
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     const pathname = request.nextUrl.pathname;
-    const publicPaths = ["/", "/login", "/register", "/terms"];
-    if (publicPaths.some((p) => pathname === p)) {
+    if (isPublicPath(pathname)) {
       return supabaseResponse;
     }
     const url = request.nextUrl.clone();
@@ -44,8 +53,7 @@ export async function updateSession(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // Public paths — no auth required
-  const publicPaths = ["/", "/login", "/register", "/terms"];
-  if (publicPaths.some((p) => pathname === p)) {
+  if (isPublicPath(pathname)) {
     return supabaseResponse;
   }
 

@@ -3,19 +3,18 @@
 import { createClient } from "@/lib/supabase/server";
 import { z } from "zod";
 
-const loginSchema = z.object({
+const emailSchema = z.object({
   email: z.string().email("有効なメールアドレスを入力してください"),
-  password: z.string().min(8, "パスワードは8文字以上です"),
 });
 
-const registerSchema = loginSchema.extend({
-  displayName: z.string().min(1, "表示名を入力してください").max(50),
+const otpSchema = z.object({
+  email: z.string().email(),
+  token: z.string().length(6, "確認コードは6桁です"),
 });
 
-export async function login(formData: FormData) {
-  const parsed = loginSchema.safeParse({
+export async function sendOtp(formData: FormData) {
+  const parsed = emailSchema.safeParse({
     email: formData.get("email"),
-    password: formData.get("password"),
   });
 
   if (!parsed.success) {
@@ -23,20 +22,24 @@ export async function login(formData: FormData) {
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword(parsed.data);
+  const { error } = await supabase.auth.signInWithOtp({
+    email: parsed.data.email,
+    options: {
+      shouldCreateUser: true,
+    },
+  });
 
   if (error) {
-    return { error: "メールアドレスまたはパスワードが正しくありません" };
+    return { error: "確認コードの送信に失敗しました。しばらくしてからお試しください" };
   }
 
   return { success: true };
 }
 
-export async function register(formData: FormData) {
-  const parsed = registerSchema.safeParse({
+export async function verifyOtp(formData: FormData) {
+  const parsed = otpSchema.safeParse({
     email: formData.get("email"),
-    password: formData.get("password"),
-    displayName: formData.get("displayName"),
+    token: formData.get("token"),
   });
 
   if (!parsed.success) {
@@ -44,16 +47,35 @@ export async function register(formData: FormData) {
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signUp({
+  const { error } = await supabase.auth.verifyOtp({
     email: parsed.data.email,
-    password: parsed.data.password,
-    options: {
-      data: { display_name: parsed.data.displayName },
-    },
+    token: parsed.data.token,
+    type: "email",
   });
 
   if (error) {
-    return { error: "登録に失敗しました。別のメールアドレスをお試しください" };
+    return { error: "確認コードが正しくありません" };
+  }
+
+  // Ensure user profile exists
+  const { data: { user } } = await supabase.auth.getUser();
+  if (user) {
+    const { data: existing } = await supabase
+      .from("users")
+      .select("id")
+      .eq("id", user.id)
+      .single();
+
+    if (!existing) {
+      await supabase.from("users").insert({
+        id: user.id,
+        email: user.email!,
+        display_name: null,
+        subscription_plan: "free",
+        streak_days: 0,
+        notification_enabled: false,
+      });
+    }
   }
 
   return { success: true };
