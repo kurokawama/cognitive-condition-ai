@@ -124,7 +124,7 @@ export default function LandingPage() {
                 <br />
                 今日は何点？
               </h1>
-              <p className="mx-auto mt-4 max-w-xl text-lg text-text-secondary lg:mx-0">
+              <p className="mx-auto mt-4 max-w-[36rem] text-lg text-text-secondary lg:mx-0">
                 AIがあなたの認知パフォーマンスを記録し、最適なコンディション維持をサポートします
               </p>
               <div className="mt-8 flex flex-col items-center gap-3 lg:items-start">
@@ -138,7 +138,7 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div className="mx-auto w-full max-w-sm rounded-3xl bg-white p-5 shadow-2xl">
+            <div className="mx-auto w-full max-w-[24rem] rounded-3xl bg-white p-5 shadow-2xl">
               <div className="rounded-2xl border border-slate-100 bg-slate-50 p-5">
                 <div className="flex items-center justify-between text-sm text-text-secondary">
                   <span>スコア表示</span>

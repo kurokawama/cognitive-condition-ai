@@ -90,7 +90,7 @@ export default async function ResultPage() {
   const gaugeOffset = gaugeCircumference - (normalizedScore / 100) * gaugeCircumference;
 
   return (
-    <div className="mx-auto w-full max-w-md space-y-5 bg-slate-50 p-5">
+    <div className="mx-auto w-full max-w-[28rem] space-y-5 bg-slate-50 p-5">
       <section className="rounded-3xl bg-white p-6 text-center shadow-[0_8px_30px_rgba(14,165,233,0.08)]">
         <div className="relative mx-auto flex h-14 w-14 items-center justify-center">
           <span className="absolute inset-0 rounded-full bg-green-100/70 animate-ping" />

@@ -82,7 +82,7 @@ export default function CheckPage() {
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-md flex-col gap-6 bg-slate-50 p-5">
+    <div className="mx-auto flex w-full max-w-[28rem] flex-col gap-6 bg-slate-50 p-5">
       <header className="rounded-3xl bg-white p-5 shadow-[0_8px_30px_rgba(14,165,233,0.08)]">
         <h1 className="text-2xl font-bold text-slate-800">認知チェック</h1>
         <div className="mt-3 flex items-center justify-between">

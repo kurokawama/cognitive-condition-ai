@@ -79,7 +79,7 @@ export default async function HomePage() {
   const checkCount = trendValuesRaw.length;
 
   return (
-    <div className="mx-auto w-full max-w-md space-y-5 bg-slate-50 p-5">
+    <div className="mx-auto w-full max-w-[28rem] space-y-5 bg-slate-50 p-5">
       <header className="rounded-3xl bg-white p-5 shadow-sm">
         <h1 className="text-2xl font-bold text-slate-800">
           {getGreeting()}、{displayName}さん
