@@ -69,13 +69,21 @@ export default function AboutPage() {
             </p>
           </section>
 
-          <div className="mt-10 text-center">
+          <div className="mt-10 flex flex-col items-center gap-4">
             <Link
               href="/check-demo"
               className="inline-flex min-h-12 items-center justify-center rounded-xl bg-primary px-8 py-3 text-lg font-semibold text-white shadow-md transition hover:bg-primary-hover"
             >
               無料で体験してみる →
             </Link>
+            <div className="flex gap-6 text-base text-text-secondary">
+              <Link href="/subscription" className="hover:text-primary hover:underline">
+                料金プラン
+              </Link>
+              <Link href="/blog" className="hover:text-primary hover:underline">
+                ブログ
+              </Link>
+            </div>
           </div>
         </div>
       </div>
