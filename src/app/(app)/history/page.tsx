@@ -47,34 +47,51 @@ export default async function HistoryPage() {
   }));
 
   return (
-    <div className="mx-auto max-w-4xl space-y-6 p-6">
-      <h1 className="text-2xl font-bold text-slate-800">推移グラフ</h1>
+    <div className="bg-slate-50">
+      <div className="mx-auto max-w-5xl space-y-6 px-4 pb-8 pt-6 sm:px-6">
+        <header className="rounded-2xl border border-sky-100 bg-gradient-to-r from-sky-50 to-white p-6 shadow-[0_8px_30px_rgba(14,165,233,0.08)]">
+          <h1 className="text-2xl font-bold text-slate-800 md:text-3xl">推移グラフ</h1>
+        </header>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <h2 className="text-xl font-semibold text-slate-800">7日推移</h2>
-        <p className="mt-1 text-base text-slate-500">
-          総合スコア / 反応 / 記憶 / 注意
-        </p>
-        <div className="mt-4">
-          <ScoreChart data={sevenDayData} mode="history" height={200} />
-        </div>
-      </section>
-
-      <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <h2 className="text-xl font-semibold text-slate-800">90日推移</h2>
-
-        {premiumUser ? (
-          <div className="mt-4">
-            <ScoreChart data={ninetyDayData} mode="history" height={200} />
+        <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="text-xl font-semibold text-slate-800">7日推移</h2>
+            <span className="rounded-full bg-sky-100 px-3 py-1 text-base font-semibold text-sky-700">
+              無料
+            </span>
           </div>
-        ) : (
-          <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-6 text-center">
-            <p className="text-lg font-semibold text-slate-700">
-              プレミアムで90日履歴を見る
-            </p>
+          <p className="mt-1 text-base text-slate-500">総合スコア / 反応 / 記憶 / 注意</p>
+          <div className="mt-4 rounded-xl bg-slate-50 p-3">
+            <ScoreChart data={sevenDayData} mode="history" height={240} />
           </div>
-        )}
-      </section>
+        </section>
+
+        <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="text-xl font-semibold text-slate-800">90日推移</h2>
+            <span className="rounded-full bg-green-100 px-3 py-1 text-base font-semibold text-green-700">
+              プレミアム
+            </span>
+          </div>
+
+          {premiumUser ? (
+            <div className="mt-4 rounded-xl bg-slate-50 p-3">
+              <ScoreChart data={ninetyDayData} mode="history" height={240} />
+            </div>
+          ) : (
+            <div className="relative mt-4 overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-6 text-center">
+              <div className="pointer-events-none blur-[1px]">
+                <div className="mx-auto h-[220px] w-full max-w-3xl rounded-xl bg-gradient-to-br from-sky-100 via-white to-green-50" />
+              </div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <p className="rounded-full bg-sky-500 px-6 py-3 text-lg font-semibold text-white shadow-sm">
+                  プレミアムで90日履歴を見る
+                </p>
+              </div>
+            </div>
+          )}
+        </section>
+      </div>
     </div>
   );
 }
