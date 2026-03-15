@@ -92,19 +92,25 @@ export default async function BlogArticlePage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="min-h-screen bg-bg px-5 py-12">
-        <article className="mx-auto max-w-2xl">
-          <Link href="/blog" className="text-base text-primary hover:underline">
-            ← ブログ一覧に戻る
-          </Link>
-          <time className="mt-4 block text-sm text-text-muted">{article.date}</time>
-          <h1 className="mt-2 text-3xl font-bold text-text-primary">{article.title}</h1>
-          <div className="mt-6 space-y-4 text-lg leading-relaxed text-text-secondary">
-            {article.content.split("\n\n").map((paragraph, i) => (
-              <p key={i}>{paragraph}</p>
-            ))}
+      <div className="min-h-screen bg-slate-50 px-5 py-12">
+        <article className="mx-auto max-w-4xl">
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+            <Link
+              href="/blog"
+              className="inline-flex min-h-12 items-center rounded-xl px-3 text-base text-primary transition hover:bg-sky-50 hover:underline"
+            >
+              ← ブログ一覧に戻る
+            </Link>
+            <time className="mt-4 block text-sm text-text-muted">{article.date}</time>
+            <h1 className="mt-2 text-3xl font-bold text-text-primary">{article.title}</h1>
+            <div className="mt-6 space-y-4 text-lg leading-relaxed text-text-secondary">
+              {article.content.split("\n\n").map((paragraph, i) => (
+                <p key={i}>{paragraph}</p>
+              ))}
+            </div>
           </div>
-          <div className="mt-10 rounded-xl bg-white p-6 shadow-sm text-center">
+
+          <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-[0_8px_30px_rgba(14,165,233,0.08)]">
             <p className="text-lg font-medium text-text-primary">あなたの認知コンディションをチェック</p>
             <Link
               href="/check-demo"
