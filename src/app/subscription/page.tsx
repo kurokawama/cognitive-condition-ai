@@ -1,12 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useState, Suspense } from "react";
+import { createCheckoutSession } from "@/app/actions/stripe";
 import { PRICING } from "@/lib/subscription";
 
 type BillingCycle = "monthly" | "yearly";
 
-export default function SubscriptionPage() {
+function SubscriptionContent() {
+  const searchParams = useSearchParams();
+  const status = searchParams.get("status");
   const [billingCycle, setBillingCycle] = useState<BillingCycle>("yearly");
+  const [isLoading, setIsLoading] = useState(false);
+
+  async function handleCheckout(plan: BillingCycle) {
+    setIsLoading(true);
+    const result = await createCheckoutSession(plan);
+    if (result.url) {
+      window.location.href = result.url;
+    } else {
+      window.alert(result.error || "エラーが発生しました");
+      setIsLoading(false);
+    }
+  }
   const yearlyMonthlyEquivalent = Math.round(PRICING.yearly / 12);
   const savingsRate = Math.round((1 - PRICING.yearly / (PRICING.monthly * 12)) * 100);
   const yearlySavingsLabel = `年間 ¥${PRICING.yearlySavings.toLocaleString()} お得`;
@@ -135,10 +151,11 @@ export default function SubscriptionPage() {
 
               <button
                 type="button"
-                onClick={() => window.alert("決済機能は準備中です")}
-                className="mt-5 flex min-h-12 w-full items-center justify-center rounded-xl bg-green-800 px-6 py-3 text-lg font-semibold text-white shadow-sm transition hover:bg-green-900"
+                onClick={() => void handleCheckout("yearly")}
+                disabled={isLoading}
+                className="mt-5 flex min-h-12 w-full items-center justify-center rounded-xl bg-green-800 px-6 py-3 text-lg font-semibold text-white shadow-sm transition hover:bg-green-900 disabled:opacity-50"
               >
-                年額プランで始める
+                {isLoading ? "処理中..." : "年額プランで始める"}
               </button>
             </article>
 
@@ -157,10 +174,11 @@ export default function SubscriptionPage() {
               <p className="mt-1 text-base text-slate-500">いつでもキャンセルできます</p>
               <button
                 type="button"
-                onClick={() => window.alert("決済機能は準備中です")}
-                className="mt-5 flex min-h-12 w-full items-center justify-center rounded-xl border-2 border-green-800 bg-white px-6 py-3 text-lg font-semibold text-green-900 shadow-sm transition hover:bg-green-50"
+                onClick={() => void handleCheckout("monthly")}
+                disabled={isLoading}
+                className="mt-5 flex min-h-12 w-full items-center justify-center rounded-xl border-2 border-green-800 bg-white px-6 py-3 text-lg font-semibold text-green-900 shadow-sm transition hover:bg-green-50 disabled:opacity-50"
               >
-                月額プランで始める
+                {isLoading ? "処理中..." : "月額プランで始める"}
               </button>
             </article>
           </div>
@@ -242,31 +260,61 @@ export default function SubscriptionPage() {
           ))}
         </section>
 
-        <button
-          type="button"
-          onClick={() => window.alert("決済機能は準備中です")}
-          className="flex min-h-12 w-full items-center justify-center rounded-xl bg-sky-500 px-6 py-4 text-lg font-semibold text-white shadow-sm transition hover:bg-sky-600"
-        >
-          プレミアムを始める
-        </button>
+        {status === "success" && (
+          <div className="rounded-xl border border-green-200 bg-green-50 p-4 text-center">
+            <p className="text-lg font-semibold text-green-800">プレミアムプランに登録しました</p>
+            <p className="mt-1 text-base text-green-700">すべての機能をお楽しみください。</p>
+          </div>
+        )}
 
-        <p className="text-center text-base text-slate-500">いつでもキャンセルできます</p>
+        {status === "cancel" && (
+          <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-center">
+            <p className="text-lg font-semibold text-slate-800">決済がキャンセルされました</p>
+            <p className="mt-1 text-base text-slate-600">いつでもお好きなタイミングで登録いただけます。</p>
+          </div>
+        )}
+
+        {!status && (
+          <>
+            <button
+              type="button"
+              onClick={() => void handleCheckout(billingCycle)}
+              disabled={isLoading}
+              className="flex min-h-12 w-full items-center justify-center rounded-xl bg-sky-500 px-6 py-4 text-lg font-semibold text-white shadow-sm transition hover:bg-sky-600 disabled:opacity-50"
+            >
+              {isLoading ? "処理中..." : "プレミアムを始める"}
+            </button>
+
+            <p className="text-center text-base text-slate-500">いつでもキャンセルできます</p>
+          </>
+        )}
       </div>
 
-      <div className="fixed inset-x-0 bottom-20 z-40 px-4 pb-[calc(env(safe-area-inset-bottom)+0.5rem)]">
-        <div className="mx-auto max-w-5xl rounded-xl border border-slate-200 bg-white p-3 shadow-[0_-4px_12px_rgba(0,0,0,0.06)]">
-          <button
-            type="button"
-            onClick={() => window.alert("決済機能は準備中です")}
-            className="flex min-h-12 w-full flex-col items-center justify-center rounded-xl bg-green-800 px-4 py-3 text-white"
-          >
-            <span className="text-lg font-semibold">
-              年額プランで始める — ¥{PRICING.yearly.toLocaleString()}/年
-            </span>
-            <span className="text-base text-green-100">7日間の無料トライアル付き</span>
-          </button>
+      {!status && (
+        <div className="fixed inset-x-0 bottom-20 z-40 px-4 pb-[calc(env(safe-area-inset-bottom)+0.5rem)]">
+          <div className="mx-auto max-w-5xl rounded-xl border border-slate-200 bg-white p-3 shadow-[0_-4px_12px_rgba(0,0,0,0.06)]">
+            <button
+              type="button"
+              onClick={() => void handleCheckout("yearly")}
+              disabled={isLoading}
+              className="flex min-h-12 w-full flex-col items-center justify-center rounded-xl bg-green-800 px-4 py-3 text-white disabled:opacity-50"
+            >
+              <span className="text-lg font-semibold">
+                {isLoading ? "処理中..." : `年額プランで始める — ¥${PRICING.yearly.toLocaleString()}/年`}
+              </span>
+              <span className="text-base text-green-100">7日間の無料トライアル付き</span>
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
+  );
+}
+
+export default function SubscriptionPage() {
+  return (
+    <Suspense>
+      <SubscriptionContent />
+    </Suspense>
   );
 }

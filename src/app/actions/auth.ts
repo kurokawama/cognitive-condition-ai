@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { z } from "zod";
 
 const emailSchema = z.object({
@@ -57,17 +57,18 @@ export async function verifyOtp(formData: FormData) {
     return { error: "確認コードが正しくありません" };
   }
 
-  // Ensure user profile exists
+  // Ensure user profile exists (use service client to bypass RLS)
   const { data: { user } } = await supabase.auth.getUser();
   if (user) {
-    const { data: existing } = await supabase
+    const serviceClient = await createServiceClient();
+    const { data: existing } = await serviceClient
       .from("users")
       .select("id")
       .eq("id", user.id)
       .single();
 
     if (!existing) {
-      await supabase.from("users").insert({
+      await serviceClient.from("users").insert({
         id: user.id,
         email: user.email!,
         display_name: null,

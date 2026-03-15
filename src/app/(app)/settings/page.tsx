@@ -1,33 +1,85 @@
+"use client";
+
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { getUser, logout } from "@/app/actions/auth";
+import { updateNotification, exportUserData } from "@/app/actions/settings";
 import { getSubscriptionLabel } from "@/lib/subscription";
-import { createClient } from "@/lib/supabase/server";
+import type { User } from "@/types/database";
 
-export default async function SettingsPage() {
-  const profile = await getUser();
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+export default function SettingsPage() {
+  const router = useRouter();
+  const [profile, setProfile] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [notifEnabled, setNotifEnabled] = useState(false);
+  const [notifSaving, setNotifSaving] = useState(false);
+  const [exportLoading, setExportLoading] = useState(false);
+  const [exportMsg, setExportMsg] = useState<string | null>(null);
 
-  if (!user) {
-    redirect("/login");
+  useEffect(() => {
+    async function load() {
+      const user = await getUser();
+      if (!user) {
+        router.push("/login");
+        return;
+      }
+      setProfile(user as User);
+      setNotifEnabled((user as User).notification_enabled);
+      setIsLoading(false);
+    }
+    void load();
+  }, [router]);
+
+  async function handleNotifToggle() {
+    const newValue = !notifEnabled;
+    setNotifEnabled(newValue);
+    setNotifSaving(true);
+    await updateNotification(newValue);
+    setNotifSaving(false);
   }
 
-  const displayName = profile?.display_name ?? user.user_metadata?.display_name ?? "未設定";
-  const email = profile?.email ?? user.email ?? "未設定";
+  async function handleExport() {
+    setExportLoading(true);
+    setExportMsg(null);
+    const result = await exportUserData();
+    if (result.success) {
+      const blob = new Blob(["\uFEFF" + result.csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `cognitive-check-data-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      setExportMsg("ダウンロードしました");
+    } else {
+      setExportMsg(result.error);
+    }
+    setExportLoading(false);
+  }
+
+  async function handleLogout() {
+    await logout();
+    router.push("/login");
+  }
+
+  if (isLoading) {
+    return (
+      <div className="bg-slate-50">
+        <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 pb-8 pt-6 sm:px-6">
+          <div className="h-20 animate-pulse rounded-2xl bg-slate-200" />
+          <div className="h-40 animate-pulse rounded-xl bg-slate-200" />
+        </div>
+      </div>
+    );
+  }
+
+  const displayName = profile?.display_name ?? "未設定";
+  const email = profile?.email ?? "未設定";
   const planLabel = profile?.subscription_plan
     ? getSubscriptionLabel(profile.subscription_plan)
     : "無料プラン";
   const isPremiumPlan = profile?.subscription_plan === "premium";
-  const notificationEnabled = profile?.notification_enabled ?? false;
-
-  async function handleLogout() {
-    "use server";
-    await logout();
-    // redirect is handled by middleware after session is cleared
-  }
 
   return (
     <div className="bg-slate-50">
@@ -62,33 +114,74 @@ export default async function SettingsPage() {
               {planLabel}
             </span>
           </div>
-          <div className="mt-4">
-            <Link
-              href="/subscription"
-              className="inline-flex min-h-12 items-center justify-center rounded-xl border border-green-800 bg-white px-5 py-3 text-lg font-semibold text-green-900 transition hover:bg-green-50"
-            >
-              プラン管理
-            </Link>
-          </div>
+          {isPremiumPlan ? (
+            <div className="mt-4">
+              <Link
+                href="/subscription"
+                className="inline-flex min-h-12 items-center justify-center rounded-xl border border-green-800 bg-white px-5 py-3 text-lg font-semibold text-green-900 transition hover:bg-green-50"
+              >
+                プラン管理
+              </Link>
+            </div>
+          ) : (
+            <div className="mt-4 space-y-3">
+              <div className="rounded-xl bg-slate-50 p-4">
+                <p className="text-base text-slate-500">無料プランで利用中</p>
+                <ul className="mt-2 space-y-1.5 text-base text-slate-600">
+                  <li className="flex items-center gap-2">
+                    <span className="text-sky-500">&#x2713;</span> 毎日の認知チェック
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-sky-500">&#x2713;</span> 7日間の推移グラフ
+                  </li>
+                  <li className="flex items-center gap-2 text-slate-400">
+                    <span>&#x2717;</span> AI詳細分析・AIトーク無制限
+                  </li>
+                  <li className="flex items-center gap-2 text-slate-400">
+                    <span>&#x2717;</span> 90日長期トレンド
+                  </li>
+                  <li className="flex items-center gap-2 text-slate-400">
+                    <span>&#x2717;</span> CSVデータエクスポート
+                  </li>
+                </ul>
+              </div>
+              <Link
+                href="/subscription"
+                className="flex min-h-12 w-full items-center justify-center rounded-xl bg-sky-500 px-6 py-3 text-lg font-semibold text-white shadow-sm transition hover:bg-sky-600 active:scale-[0.98]"
+              >
+                月額580円でプレミアムにする
+              </Link>
+              <p className="text-center text-base text-slate-400">年額プランなら1日たった13円</p>
+            </div>
+          )}
         </section>
 
         <section className="rounded-xl border border-slate-200 bg-surface p-6 shadow-sm">
           <div className="flex items-center justify-between gap-4">
             <div className="space-y-1">
               <h2 className="text-xl font-semibold text-text-primary">通知設定</h2>
-              <p className="text-base text-text-secondary">通知を受け取る</p>
+              <p className="text-base text-text-secondary">
+                {notifSaving ? "保存中..." : "チェックリマインダーを受け取る"}
+              </p>
             </div>
-            <label className="inline-flex min-h-12 cursor-pointer items-center">
-              <input
-                type="checkbox"
-                defaultChecked={notificationEnabled}
-                className="peer sr-only"
-                aria-label="通知設定トグル"
+            <button
+              type="button"
+              onClick={() => void handleNotifToggle()}
+              className="relative inline-flex h-8 w-14 shrink-0 cursor-pointer items-center rounded-full transition-colors"
+              style={{
+                backgroundColor: notifEnabled ? "hsl(199 89% 48%)" : "#cbd5e1",
+                minHeight: "48px",
+                minWidth: "56px",
+              }}
+              role="switch"
+              aria-checked={notifEnabled}
+              aria-label="通知設定トグル"
+            >
+              <span
+                className="inline-block h-6 w-6 rounded-full bg-white shadow transition-transform"
+                style={{ transform: notifEnabled ? "translateX(28px)" : "translateX(4px)" }}
               />
-              <span className="relative h-8 w-14 rounded-full bg-slate-300 transition peer-checked:bg-primary">
-                <span className="absolute left-1 top-1 h-6 w-6 rounded-full bg-white transition peer-checked:translate-x-6" />
-              </span>
-            </label>
+            </button>
           </div>
         </section>
 
@@ -99,28 +192,33 @@ export default async function SettingsPage() {
               📁
             </span>
           </div>
-          <p className="mt-2 text-base text-text-secondary">CSV</p>
+          <p className="mt-2 text-base text-text-secondary">
+            チェック履歴をCSVファイルでダウンロード
+          </p>
+          {exportMsg && (
+            <p className="mt-2 text-base text-slate-600">{exportMsg}</p>
+          )}
           <button
             type="button"
-            disabled={!isPremiumPlan}
+            onClick={() => void handleExport()}
+            disabled={!isPremiumPlan || exportLoading}
             className={`mt-4 inline-flex min-h-12 items-center justify-center rounded-xl px-5 py-3 text-lg font-semibold transition ${
               isPremiumPlan
                 ? "border border-green-800 bg-white text-green-900 hover:bg-green-50"
                 : "cursor-not-allowed border border-slate-300 bg-slate-100 text-slate-500"
             }`}
           >
-            データエクスポート
+            {exportLoading ? "ダウンロード中..." : isPremiumPlan ? "CSVダウンロード" : "プレミアム限定"}
           </button>
         </section>
 
-        <form action={handleLogout}>
-          <button
-            type="submit"
-            className="flex min-h-12 w-full items-center justify-center rounded-xl border border-slate-300 bg-surface px-6 py-3 text-lg font-semibold text-text-primary shadow-sm transition hover:bg-slate-50"
-          >
-            ログアウト
-          </button>
-        </form>
+        <button
+          type="button"
+          onClick={() => void handleLogout()}
+          className="flex min-h-12 w-full items-center justify-center rounded-xl border border-slate-300 bg-surface px-6 py-3 text-lg font-semibold text-text-primary shadow-sm transition hover:bg-slate-50"
+        >
+          ログアウト
+        </button>
       </div>
     </div>
   );

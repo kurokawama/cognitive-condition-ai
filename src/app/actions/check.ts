@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { z } from "zod";
 import { generateScoreComment } from "@/lib/claude";
 import type { CheckSession } from "@/types/database";
@@ -27,6 +27,24 @@ export async function saveCheckResult(input: z.infer<typeof scoreSchema>) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: "認証が必要です" };
+
+  // Ensure user profile exists (auto-create if missing)
+  const serviceClient = await createServiceClient();
+  const { data: profile } = await serviceClient
+    .from("users")
+    .select("id")
+    .eq("id", user.id)
+    .single();
+
+  if (!profile) {
+    await serviceClient.from("users").insert({
+      id: user.id,
+      email: user.email!,
+      subscription_plan: "free",
+      streak_days: 0,
+      notification_enabled: false,
+    });
+  }
 
   // Check daily limit (1 check per day)
   const today = new Date().toISOString().slice(0, 10);

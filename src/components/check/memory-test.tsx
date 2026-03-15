@@ -125,7 +125,7 @@ export function MemoryTest({ onComplete }: MemoryTestProps) {
             <button
               type="submit"
               disabled={phase !== "input" || inputValue.trim() === ""}
-              className="w-full rounded-xl bg-sky-500 py-4 text-lg font-semibold text-white disabled:bg-slate-300"
+              className="w-full rounded-xl bg-sky-500 py-4 text-lg font-semibold text-white transition-all duration-100 active:scale-95 active:bg-sky-600 disabled:bg-slate-300"
             >
               回答する
             </button>

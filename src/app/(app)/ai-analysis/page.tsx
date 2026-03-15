@@ -1,8 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getAiAnalysis } from "@/app/actions/ai-analysis";
 import { getRecentSessions } from "@/app/actions/check";
+import { AiTalk } from "@/components/ai/ai-talk";
 import { AnalysisCard } from "@/components/ai/analysis-card";
 import { HypothesisCard } from "@/components/ai/hypothesis-card";
 import { ScoreChart, type ScoreChartPoint } from "@/components/chart/score-chart";
@@ -46,6 +48,8 @@ export default function AiAnalysisPage() {
   const [isPremiumPreview, setIsPremiumPreview] = useState(false);
   const [analysis, setAnalysis] = useState<AiAnalysisResult | null>(null);
   const [chartData, setChartData] = useState<ScoreChartPoint[]>([]);
+  const [showTalk, setShowTalk] = useState(false);
+  const [showPremiumInfo, setShowPremiumInfo] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -147,13 +151,71 @@ export default function AiAnalysisPage() {
             </div>
 
             {isPremiumPreview && (
-              <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-white/65 backdrop-blur-sm">
-                <p className="rounded-full bg-sky-500 px-6 py-3 text-lg font-semibold text-white shadow-sm">
-                  プレミアムで全て見る
-                </p>
-              </div>
+              <button
+                type="button"
+                onClick={() => setShowPremiumInfo(true)}
+                className="absolute inset-0 flex items-center justify-center rounded-xl bg-white/65 backdrop-blur-sm transition active:bg-white/75"
+              >
+                <span className="rounded-full bg-sky-500 px-6 py-3 text-lg font-semibold text-white shadow-sm transition hover:bg-sky-600 active:scale-95">
+                  タップしてプレミアムを見る
+                </span>
+              </button>
             )}
           </div>
+
+          {/* Premium info panel */}
+          {showPremiumInfo && (
+            <div className="rounded-xl border border-sky-200 bg-gradient-to-b from-sky-50 to-white p-5 shadow-sm">
+              <h3 className="text-xl font-bold text-slate-800">プレミアムでできること</h3>
+
+              <div className="mt-4 space-y-3">
+                <div className="flex items-start gap-3">
+                  <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sky-100 text-base">
+                    &#x1F4CA;
+                  </span>
+                  <div>
+                    <p className="text-lg font-semibold text-slate-800">AI詳細分析</p>
+                    <p className="text-base text-slate-500">7日間のデータからAIが傾向を分析し、仮説と改善提案をお届け</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sky-100 text-base">
+                    &#x1F4AC;
+                  </span>
+                  <div>
+                    <p className="text-lg font-semibold text-slate-800">AIトーク無制限</p>
+                    <p className="text-base text-slate-500">あなたのスコアに基づいた個別アドバイスを毎日何度でも</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sky-100 text-base">
+                    &#x1F4C8;
+                  </span>
+                  <div>
+                    <p className="text-lg font-semibold text-slate-800">長期トレンド</p>
+                    <p className="text-base text-slate-500">認知コンディションの変化を長期的に追跡・可視化</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-5 space-y-3">
+                <Link
+                  href="/subscription"
+                  className="flex min-h-12 w-full items-center justify-center rounded-xl bg-sky-500 px-6 py-4 text-lg font-semibold text-white shadow-sm transition active:scale-[0.98] hover:bg-sky-600"
+                >
+                  月額580円ではじめる
+                </Link>
+                <p className="text-center text-base text-slate-400">年額プランなら1日たった13円</p>
+                <button
+                  type="button"
+                  onClick={() => setShowPremiumInfo(false)}
+                  className="flex min-h-12 w-full items-center justify-center rounded-xl border border-slate-200 px-6 py-3 text-lg text-slate-500 transition hover:bg-slate-50"
+                >
+                  閉じる
+                </button>
+              </div>
+            </div>
+          )}
         </section>
 
         {!isPremiumPreview && error && (
@@ -162,13 +224,53 @@ export default function AiAnalysisPage() {
           </p>
         )}
 
-        <button
-          type="button"
-          onClick={() => window.alert("AIトーク機能は準備中です")}
-          className="flex min-h-12 w-full items-center justify-center rounded-xl bg-green-800 px-6 py-4 text-lg font-semibold text-white shadow-sm transition hover:bg-green-900"
-        >
-          AIトークで詳しく聞く
-        </button>
+        {showTalk ? (
+          <AiTalk onClose={() => setShowTalk(false)} />
+        ) : (
+          <section className="overflow-hidden rounded-xl border border-slate-200 bg-gradient-to-b from-white to-sky-50 shadow-sm">
+            <div className="px-5 pb-2 pt-5">
+              <h2 className="text-xl font-semibold text-slate-800">AIに相談してみよう</h2>
+              <p className="mt-1 text-base text-slate-500">あなたのスコアをもとにAIがアドバイス</p>
+            </div>
+
+            {/* Sample conversation preview */}
+            <div className="mx-5 my-3 space-y-2 rounded-xl bg-white/80 p-4">
+              <div className="flex justify-end">
+                <span className="rounded-2xl bg-sky-500 px-4 py-2 text-base text-white">
+                  最近スコアが下がり気味です
+                </span>
+              </div>
+              <div className="flex justify-start">
+                <span className="rounded-2xl bg-slate-100 px-4 py-2 text-base text-slate-700">
+                  記録を拝見すると、注意力が少し変動している傾向がありますね。最近、睡眠のリズムに変化はありましたか？
+                </span>
+              </div>
+              <div className="flex justify-end">
+                <span className="rounded-2xl bg-sky-500 px-4 py-2 text-base text-white">
+                  たしかに夜更かしが続いてます...
+                </span>
+              </div>
+              <div className="flex justify-start">
+                <span className="rounded-2xl bg-slate-100 px-4 py-2 text-base text-slate-700">
+                  研究では、就寝時間を30分早めるだけでも翌日の注意力が改善する傾向があるそうですよ。まずは今週だけ試してみませんか？
+                </span>
+              </div>
+            </div>
+
+            <div className="px-5 pb-5">
+              <button
+                type="button"
+                onClick={() => setShowTalk(true)}
+                className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-sky-500 px-6 py-4 text-lg font-semibold text-white shadow-sm transition active:scale-[0.98] hover:bg-sky-600"
+              >
+                無料でAIトークを体験する
+              </button>
+              <p className="mt-2 text-center text-base text-slate-400">
+                初回1回無料 ・ プレミアムなら無制限
+              </p>
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );

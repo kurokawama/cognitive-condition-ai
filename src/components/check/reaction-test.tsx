@@ -14,6 +14,7 @@ export function ReactionTest({ onComplete }: ReactionTestProps) {
   const [trialIndex, setTrialIndex] = useState(0);
   const [trials, setTrials] = useState<ReactionTrial[]>([]);
   const [currentDelayMs, setCurrentDelayMs] = useState(0);
+  const [tapped, setTapped] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const startRef = useRef(0);
 
@@ -39,6 +40,12 @@ export function ReactionTest({ onComplete }: ReactionTestProps) {
   const handleTap = () => {
     if (phase !== "ready") return;
 
+    // Haptic + visual feedback
+    setTapped(true);
+    if (typeof navigator !== "undefined" && navigator.vibrate) {
+      navigator.vibrate(30);
+    }
+
     const responseMs = Math.round(performance.now() - startRef.current);
     const nextTrials = [...trials, { delayMs: currentDelayMs, responseMs }];
     setTrials(nextTrials);
@@ -51,6 +58,7 @@ export function ReactionTest({ onComplete }: ReactionTestProps) {
 
     setTrialIndex((prev) => prev + 1);
     timeoutRef.current = setTimeout(() => {
+      setTapped(false);
       startTrial();
     }, 400);
   };
@@ -81,14 +89,16 @@ export function ReactionTest({ onComplete }: ReactionTestProps) {
             type="button"
             onClick={handleTap}
             disabled={phase === "waiting" || phase === "completed"}
-            className={`flex h-48 w-48 items-center justify-center rounded-full border-4 transition-all ${
-              phase === "ready"
-                ? "border-sky-500 bg-sky-500 text-white"
-                : "border-slate-200 bg-slate-100 text-slate-400"
+            className={`flex h-48 w-48 items-center justify-center rounded-full border-4 transition-all duration-100 ${
+              tapped
+                ? "scale-90 border-green-500 bg-green-500 text-white"
+                : phase === "ready"
+                  ? "border-sky-500 bg-sky-500 text-white active:scale-90 active:bg-green-500 active:border-green-500"
+                  : "border-slate-200 bg-slate-100 text-slate-400"
             }`}
           >
             <span className="text-lg font-semibold">
-              {phase === "ready" ? "タップ" : phase === "completed" ? "完了" : "待機中"}
+              {tapped ? "✓" : phase === "ready" ? "タップ！" : phase === "completed" ? "完了" : "待機中..."}
             </span>
           </button>
         </div>

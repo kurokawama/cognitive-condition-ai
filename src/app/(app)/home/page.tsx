@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { getRecentSessions, getTodaySession } from "@/app/actions/check";
 import { getUser } from "@/app/actions/auth";
+import { isPremium } from "@/lib/subscription";
+import { PremiumBanner } from "@/components/premium/premium-banner";
 import { ScoreGauge } from "@/components/score/score-gauge";
+import type { User } from "@/types/database";
 
 export const dynamic = "force-dynamic";
 
@@ -77,6 +80,7 @@ export default async function HomePage() {
   const averageScore = Math.round(trendValues.reduce((sum, value) => sum + value, 0) / trendValues.length);
   const highestScore = Math.max(...trendValues);
   const checkCount = trendValuesRaw.length;
+  const premiumUser = user ? isPremium(user as User) : false;
 
   return (
     <div className="mx-auto w-full max-w-[28rem] space-y-5 bg-slate-50 p-5">
@@ -145,6 +149,8 @@ export default async function HomePage() {
           <p className="text-2xl font-bold text-slate-800">{highestScore}</p>
         </article>
       </section>
+
+      {!premiumUser && <PremiumBanner variant="home" />}
 
       {completedToday ? (
         <button

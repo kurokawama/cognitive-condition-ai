@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { getRecentSessions } from "@/app/actions/check";
 import { ScoreChart, type ScoreChartPoint } from "@/components/chart/score-chart";
 import { isPremium } from "@/lib/subscription";
+import { PremiumBanner } from "@/components/premium/premium-banner";
 import { createClient } from "@/lib/supabase/server";
 import type { User } from "@/types/database";
 
@@ -79,18 +81,23 @@ export default async function HistoryPage() {
               <ScoreChart data={ninetyDayData} mode="history" height={240} />
             </div>
           ) : (
-            <div className="relative mt-4 overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-6 text-center">
+            <Link
+              href="/subscription"
+              className="relative mt-4 block overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-6 text-center transition active:scale-[0.99] hover:shadow-md"
+            >
               <div className="pointer-events-none blur-[1px]">
                 <div className="mx-auto h-[220px] w-full max-w-3xl rounded-xl bg-gradient-to-br from-sky-100 via-white to-green-50" />
               </div>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <p className="rounded-full bg-sky-500 px-6 py-3 text-lg font-semibold text-white shadow-sm">
-                  プレミアムで90日履歴を見る
-                </p>
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+                <span className="rounded-full bg-sky-500 px-6 py-3 text-lg font-semibold text-white shadow-sm">
+                  タップして90日トレンドを見る
+                </span>
+                <span className="text-base text-slate-500">月額580円 / 年額なら1日13円</span>
               </div>
-            </div>
+            </Link>
           )}
         </section>
+        {!premiumUser && <PremiumBanner variant="history" />}
       </div>
     </div>
   );

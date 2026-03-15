@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { getRecentSessions, getTodaySession } from "@/app/actions/check";
+import { getUser } from "@/app/actions/auth";
+import { isPremium } from "@/lib/subscription";
+import { PremiumBanner } from "@/components/premium/premium-banner";
 import { ScoreComparison } from "@/components/score/score-comparison";
+import type { User } from "@/types/database";
 
 export const dynamic = "force-dynamic";
 
@@ -48,7 +52,8 @@ function SubScoreBar({
 }
 
 export default async function ResultPage() {
-  const [todaySession, recentSessions] = await Promise.all([getTodaySession(), getRecentSessions(14)]);
+  const [todaySession, recentSessions, user] = await Promise.all([getTodaySession(), getRecentSessions(14), getUser()]);
+  const premiumUser = user ? isPremium(user as User) : false;
   const latestSession =
     todaySession ?? (recentSessions.length > 0 ? recentSessions[recentSessions.length - 1] : null);
   const previousSession = latestSession
@@ -195,6 +200,8 @@ export default async function ResultPage() {
           <p className="flex-1 text-lg leading-relaxed text-slate-700">{aiComment}</p>
         </div>
       </section>
+
+      {!premiumUser && <PremiumBanner variant="result" />}
 
       <div className="space-y-3">
         <Link
