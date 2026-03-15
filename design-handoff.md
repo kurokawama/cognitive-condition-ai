@@ -234,3 +234,50 @@
 | 5 | D7無料体験カウントダウンバナー追加 | 前回合議 | High |
 | 6 | Subscription「ストーリー訴求」追加 | 前回合議 | Medium |
 | 7 | 年額プランの具体金額表示「年間で○円お得」 | 前回合議 | Medium |
+
+## Design Director 詳細実装仕様（Cursor Agent参照用）
+
+### 共通デザインシステム
+- **Shadow（青味シャドウ）**: `shadow-[0_8px_30px_rgba(14,165,233,0.08)]` — スコアカード等の重要カードに使用
+- **Icon背景サークル**: 各アイコンに48x48の淡色円背景（sky: #E0F2FE, green: #DCFCE7, purple: #EDE9FE）
+- **セクション背景リズム**: #FFFFFF → #F1F5F9 → #FFFFFF → #F1F5F9（視覚的区切り）
+- **カード左ボーダー**: 3-4px のアクセントカラーボーダーでカテゴリを視覚識別
+
+### Landing Page (`/`) 詳細
+- ヘッダー: sticky + scroll時 shadow-sm / ロゴ(brain wave icon #0EA5E9) + nav links + ゴーストボタン
+- ヒーロー: padding 80px上下 / H1 32px 700 max-width 320px / フォンモックアップ rounded-3xl shadow-2xl
+- 3ステップカード: 各カード左ボーダー4px（sky/green/purple）
+- デモプレビュー: shadow-lg max-width 340px / ミニゲームモックアップ
+- 料金プレビュー: 無料カード(border #E2E8F0) vs プレミアムカード(border 2px #0EA5E9 + おすすめバッジ)
+- FAQ: アコーディオン / chevron icon / 1px #E2E8F0 dividers
+- フッター: bg #1E293B / 白テキスト / 「本サービスは医療診断を行うものではありません」12px #94A3B8
+
+### Home (`/home`) 詳細
+- スコアカード: rounded-3xl shadow-lg(blue tint) / SVGゲージ ring(stroke-width 8, radius ~70px)
+- ゲージ内: スコア 64px Inter 700 / ステータスバッジ pill #DCFCE7
+- 前日比: 水平矢印→のみ（下矢印厳禁）/ 減少時は「→ 変化なし」#94A3B8
+- 7日間スパークライン: 48px幅 24px高 #0EA5E9 curve + #E0F2FE area fill
+- チェック開始ボタン: 56px高 gradient bg / subtle pulse animation
+- ストリークバッジ: #FEF3C7背景 / flame icon #F59E0B / テキスト #92400E
+- AIコメント: sparkle icon #8B5CF6 + 左ボーダー3px #8B5CF6
+- 週間サマリー: 3カード横並び（平均スコア/チェック回数/最高スコア）各 24px 700
+
+### Result (`/result`) 詳細
+- スコアヒーロー: rounded-3xl shadow-lg(blue tint) / 64px Inter 700
+- ステータスバッジ: pill #DCFCE7 bg #22C55E text
+- 14日間ミニエリアチャート: #0EA5E9 line + opacity 0.1 area fill
+- サブスコア3カード: 各カード左ボーダー3px（sky/green/purple）/ 進捗バー6px rounded-full
+- AIコメント: gradient左ボーダー(#8B5CF6 → #0EA5E9)
+- アクションボタン: 「ひとこと記録」white+border / 「AI分析を詳しく見る」gradient
+
+### Subscription (`/subscription`) 詳細
+- 課金トグル: segmented control pill / rounded-full bg #F1F5F9
+- 年額選択時バッジ: 「年額で3ヶ月分お得」#DCFCE7 bg #22C55E text
+- 無料カード: border 1.5px #E2E8F0 / ロック機能に lock icon #CBD5E1
+- プレミアムカード: border 2px #0EA5E9 shadow-lg(blue tint) / おすすめバッジ absolute top-right
+- 取消線価格: ¥580 に line-through #94A3B8
+- 年間節約額: 「年間 ¥2,160 お得」pill #DCFCE7
+- 日額フレーミング: 「1日あたり約¥19 — コーヒー1杯より手軽に」+ coffee icon #F59E0B
+- 信頼シグナル: shield/lock/refresh icons + テーマ色サークル背景
+- 比較表: rounded-xl overflow-hidden / ヘッダー #F1F5F9 / 交互行色
+- Sticky底部CTA: shadow-[0_-4px_12px_rgba(0,0,0,0.06)] + safe area padding
