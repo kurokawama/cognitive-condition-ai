@@ -4,8 +4,8 @@
     "name": "認知コンディション AI",
     "description": "毎日1分の認知チェック+AIコーチングで頭のコンディションを可視化するアプリ（PMDA規制準拠: 診断・リスク予測禁止、コンディション表示に限定）",
     "created_at": "2026-03-14",
-    "updated_at": "2026-03-14",
-    "update_note": "Product Architect 全面再設計: パス体系統一(/auth/*)、org_admin Phase 2定義、全フロー・edge_case網羅、ランディング・/note・/terms追加"
+    "updated_at": "2026-03-15",
+    "update_note": "Revival v3: B2Cオンリー転換。org_admin削除、SEOページ5追加、価格¥580/月に変更"
   },
 
   "roles": [
@@ -22,21 +22,11 @@
     {
       "id": "user_premium",
       "name": "一般ユーザー（有料）",
-      "description": "全機能利用可能: AIトーク・AI分析・週次レポート・90日履歴・パーソナル提案。月額980円/年額7800円。",
+      "description": "全機能利用可能: AIトーク・AI分析・週次レポート・90日履歴・パーソナル提案。月額580円/年額4,800円。",
       "auth_level": "premium",
       "test_account": {
         "email": "premium@test.example.com",
         "note": "有料プランテストユーザー。subscription_status=active。"
-      }
-    },
-    {
-      "id": "org_admin",
-      "name": "法人管理者",
-      "description": "Phase 2: 法人向け従業員コンディション管理。チーム平均スコア・傾向レポート・アラート設定。個人スコアは非表示（プライバシー保護）。",
-      "auth_level": "org_admin",
-      "test_account": {
-        "email": "admin@corp.example.com",
-        "note": "Phase 2テストアカウント。Phase 1ではDB上にロール定義のみ存在。"
       }
     }
   ],
@@ -45,13 +35,21 @@
     {
       "id": "landing",
       "path": "/",
-      "name": "ランディングページ",
+      "name": "ランディングページ（SEO最適化版）",
       "layout_group": "public",
       "requires_auth": false,
-      "allowed_roles": ["user", "user_premium", "org_admin"],
+      "allowed_roles": ["user", "user_premium"],
       "phase": "mvp",
       "components": {
         "buttons": [
+          {
+            "id": "btn_cta_demo",
+            "label": "無料で体験してみる",
+            "action": "チェックデモ画面に遷移",
+            "action_type": "navigation",
+            "target": "/check-demo",
+            "expected_result": "認証不要のチェックデモ画面が表示される"
+          },
           {
             "id": "btn_cta_signup",
             "label": "無料で始める",
@@ -71,6 +69,30 @@
         ],
         "links": [
           {
+            "id": "link_nav_features",
+            "label": "特徴",
+            "destination": "/#features",
+            "type": "navigation"
+          },
+          {
+            "id": "link_nav_pricing",
+            "label": "料金",
+            "destination": "/#pricing",
+            "type": "navigation"
+          },
+          {
+            "id": "link_nav_blog",
+            "label": "ブログ",
+            "destination": "/blog",
+            "type": "navigation"
+          },
+          {
+            "id": "link_nav_about",
+            "label": "サービス紹介",
+            "destination": "/about",
+            "type": "navigation"
+          },
+          {
             "id": "link_terms_landing",
             "label": "利用規約",
             "destination": "/terms",
@@ -89,19 +111,234 @@
             "id": "data_hero",
             "type": "card",
             "data_source": "static",
-            "description": "ヒーローセクション: キャッチコピー「頭の体重計」+ サービス説明 + PMDA免責表示"
+            "description": "H1: 「頭の体重計」キャッチコピー + H2: サービス説明 + PMDA免責表示。SEO最適化されたH1/H2構造。"
           },
           {
             "id": "data_features",
             "type": "card",
             "data_source": "static",
-            "description": "機能紹介: 60秒チェック・AIコーチング・推移グラフの3つ"
+            "description": "特徴セクション(id=features): 60秒チェック・AIコーチング・推移グラフの3つ"
           },
           {
-            "id": "data_plan_overview",
+            "id": "data_inline_demo",
             "type": "card",
             "data_source": "static",
-            "description": "無料/有料プランの概要比較"
+            "description": "インラインデモセクション: チェック体験のプレビュー表示（/check-demoへのCTA付き）"
+          },
+          {
+            "id": "data_pricing",
+            "type": "card",
+            "data_source": "static",
+            "description": "料金セクション(id=pricing): 無料プラン(¥0) / プレミアム(¥580/月, ¥4,800/年)の比較"
+          },
+          {
+            "id": "data_faq",
+            "type": "card",
+            "data_source": "static",
+            "description": "FAQセクション: よくある質問をアコーディオン形式で表示。FAQ JSON-LDスキーマを出力。"
+          }
+        ]
+      }
+    },
+    {
+      "id": "about",
+      "path": "/about",
+      "name": "サービス紹介+FAQ",
+      "layout_group": "public",
+      "requires_auth": false,
+      "allowed_roles": ["user", "user_premium"],
+      "phase": "mvp",
+      "rendering": "SSG",
+      "structured_data": "FAQ JSON-LD",
+      "components": {
+        "buttons": [
+          {
+            "id": "btn_about_demo",
+            "label": "無料で体験",
+            "action": "チェックデモ画面に遷移",
+            "action_type": "navigation",
+            "target": "/check-demo",
+            "expected_result": "認証不要のチェックデモ画面が表示される"
+          },
+          {
+            "id": "btn_about_signup",
+            "label": "登録",
+            "action": "新規登録画面に遷移",
+            "action_type": "navigation",
+            "target": "/auth/signup",
+            "expected_result": "サインアップ画面が表示される"
+          }
+        ],
+        "links": [
+          {
+            "id": "link_about_home",
+            "label": "ホーム",
+            "destination": "/",
+            "type": "navigation"
+          },
+          {
+            "id": "link_about_blog",
+            "label": "ブログ",
+            "destination": "/blog",
+            "type": "navigation"
+          }
+        ],
+        "forms": [],
+        "data_displays": [
+          {
+            "id": "data_about_service",
+            "type": "card",
+            "data_source": "static",
+            "description": "サービス概要: コンセプト・対象ユーザー・PMDA準拠の説明"
+          },
+          {
+            "id": "data_about_how_it_works",
+            "type": "card",
+            "data_source": "static",
+            "description": "使い方3ステップ: チェック→スコア→改善提案"
+          },
+          {
+            "id": "data_about_faq",
+            "type": "card",
+            "data_source": "static",
+            "description": "FAQ: よくある質問をアコーディオン形式で表示。FAQ JSON-LDスキーマを出力。"
+          }
+        ]
+      }
+    },
+    {
+      "id": "blog_list",
+      "path": "/blog",
+      "name": "ブログ一覧",
+      "layout_group": "public",
+      "requires_auth": false,
+      "allowed_roles": ["user", "user_premium"],
+      "phase": "mvp",
+      "rendering": "SSG",
+      "components": {
+        "buttons": [],
+        "links": [
+          {
+            "id": "link_blog_article",
+            "label": "記事タイトル",
+            "destination": "/blog/[slug]",
+            "type": "navigation"
+          },
+          {
+            "id": "link_blog_home",
+            "label": "ホーム",
+            "destination": "/",
+            "type": "navigation"
+          }
+        ],
+        "forms": [],
+        "data_displays": [
+          {
+            "id": "data_blog_articles",
+            "type": "table",
+            "data_source": "getBlogArticles",
+            "description": "ブログ記事一覧: サムネイル・タイトル・公開日・カテゴリ。新着順表示。"
+          }
+        ]
+      }
+    },
+    {
+      "id": "blog_article",
+      "path": "/blog/[slug]",
+      "name": "ブログ記事",
+      "layout_group": "public",
+      "requires_auth": false,
+      "allowed_roles": ["user", "user_premium"],
+      "phase": "mvp",
+      "rendering": "SSG",
+      "structured_data": "Article JSON-LD",
+      "components": {
+        "buttons": [
+          {
+            "id": "btn_blog_demo",
+            "label": "チェック体験",
+            "action": "チェックデモ画面に遷移",
+            "action_type": "navigation",
+            "target": "/check-demo",
+            "expected_result": "認証不要のチェックデモ画面が表示される"
+          },
+          {
+            "id": "btn_blog_signup",
+            "label": "登録",
+            "action": "新規登録画面に遷移",
+            "action_type": "navigation",
+            "target": "/auth/signup",
+            "expected_result": "サインアップ画面が表示される"
+          }
+        ],
+        "links": [
+          {
+            "id": "link_article_back",
+            "label": "ブログ一覧に戻る",
+            "destination": "/blog",
+            "type": "navigation"
+          }
+        ],
+        "forms": [],
+        "data_displays": [
+          {
+            "id": "data_article_content",
+            "type": "card",
+            "data_source": "getArticleBySlug",
+            "description": "記事本文: Markdown→HTML変換。Article JSON-LDスキーマを出力。"
+          }
+        ]
+      }
+    },
+    {
+      "id": "check_demo",
+      "path": "/check-demo",
+      "name": "チェックデモ（認証不要）",
+      "layout_group": "public",
+      "requires_auth": false,
+      "allowed_roles": ["user", "user_premium"],
+      "phase": "mvp",
+      "rendering": "SSR",
+      "components": {
+        "buttons": [
+          {
+            "id": "btn_demo_start",
+            "label": "チェック開始",
+            "action": "デモチェックを開始（3問限定）",
+            "action_type": "client_state",
+            "target": "startDemoCheck",
+            "expected_result": "反応速度1問→短期記憶1問→注意切替1問の3問限定チェックが開始される"
+          },
+          {
+            "id": "btn_demo_signup",
+            "label": "無料で始める",
+            "action": "新規登録画面に遷移",
+            "action_type": "navigation",
+            "target": "/auth/signup",
+            "expected_result": "サインアップ画面が表示される（デモ結果後にCTAとして表示）"
+          }
+        ],
+        "links": [
+          {
+            "id": "link_demo_home",
+            "label": "ホーム",
+            "destination": "/",
+            "type": "navigation"
+          }
+        ],
+        "forms": [],
+        "data_displays": [
+          {
+            "id": "data_demo_instruction",
+            "type": "card",
+            "data_source": "static",
+            "description": "デモ説明: 「3問だけ体験できます。登録すると毎日フルチェック（9問）が可能です。」"
+          },
+          {
+            "id": "data_demo_result",
+            "type": "card",
+            "data_source": "client_state",
+            "description": "デモ結果: 3問の簡易スコア表示。「フルチェックで詳細な分析を受けましょう」CTA付き。"
           }
         ]
       }
@@ -167,7 +404,7 @@
       "name": "ログイン",
       "layout_group": "auth",
       "requires_auth": false,
-      "allowed_roles": ["user", "user_premium", "org_admin"],
+      "allowed_roles": ["user", "user_premium"],
       "phase": "mvp",
       "components": {
         "buttons": [
@@ -219,7 +456,7 @@
       "name": "新規登録",
       "layout_group": "auth",
       "requires_auth": false,
-      "allowed_roles": ["user", "user_premium", "org_admin"],
+      "allowed_roles": ["user", "user_premium"],
       "phase": "mvp",
       "components": {
         "buttons": [
@@ -265,7 +502,7 @@
       "name": "パスワードリセット",
       "layout_group": "auth",
       "requires_auth": false,
-      "allowed_roles": ["user", "user_premium", "org_admin"],
+      "allowed_roles": ["user", "user_premium"],
       "phase": "mvp",
       "components": {
         "buttons": [
@@ -776,7 +1013,7 @@
         "buttons": [
           {
             "id": "btn_subscribe_monthly",
-            "label": "月額980円で始める",
+            "label": "月額580円で始める",
             "action": "月額サブスクリプション開始",
             "action_type": "server_action",
             "target": "subscribeMonthly",
@@ -784,7 +1021,7 @@
           },
           {
             "id": "btn_subscribe_yearly",
-            "label": "年額7,800円（2ヶ月分お得）",
+            "label": "年額4,800円（3ヶ月分以上お得）",
             "action": "年額サブスクリプション開始",
             "action_type": "server_action",
             "target": "subscribeYearly",
@@ -927,7 +1164,7 @@
       "name": "利用規約・免責事項",
       "layout_group": "public",
       "requires_auth": false,
-      "allowed_roles": ["user", "user_premium", "org_admin"],
+      "allowed_roles": ["user", "user_premium"],
       "phase": "mvp",
       "components": {
         "buttons": [],
@@ -949,156 +1186,81 @@
           }
         ]
       }
-    },
-    {
-      "id": "admin_dashboard",
-      "path": "/admin/dashboard",
-      "name": "法人ダッシュボード",
-      "layout_group": "admin",
-      "requires_auth": true,
-      "allowed_roles": ["org_admin"],
-      "phase": "v2",
-      "components": {
-        "buttons": [],
-        "links": [
-          {
-            "id": "link_admin_members",
-            "label": "メンバー管理",
-            "destination": "/admin/members",
-            "type": "sidebar"
-          },
-          {
-            "id": "link_admin_reports",
-            "label": "レポート",
-            "destination": "/admin/reports",
-            "type": "sidebar"
-          }
-        ],
-        "forms": [],
-        "data_displays": [
-          {
-            "id": "data_team_avg_score",
-            "type": "kpi",
-            "data_source": "getTeamAvgScore",
-            "description": "チーム平均スコア（個人スコアは非表示、プライバシー保護）"
-          },
-          {
-            "id": "data_team_trend",
-            "type": "chart",
-            "data_source": "getTeamTrend",
-            "description": "チーム平均の推移グラフ（30日/90日）"
-          },
-          {
-            "id": "data_participation_rate",
-            "type": "kpi",
-            "data_source": "getParticipationRate",
-            "description": "チェック参加率（今週/先週比較）"
-          }
-        ]
-      }
-    },
-    {
-      "id": "admin_members",
-      "path": "/admin/members",
-      "name": "メンバー管理",
-      "layout_group": "admin",
-      "requires_auth": true,
-      "allowed_roles": ["org_admin"],
-      "phase": "v2",
-      "components": {
-        "buttons": [
-          {
-            "id": "btn_invite_member",
-            "label": "メンバー招待",
-            "action": "招待メール送信",
-            "action_type": "server_action",
-            "target": "inviteMember",
-            "expected_result": "招待メールが送信され、送信完了メッセージ表示"
-          },
-          {
-            "id": "btn_remove_member",
-            "label": "メンバー除外",
-            "action": "メンバーを組織から除外",
-            "action_type": "server_action",
-            "target": "removeMember",
-            "expected_result": "確認ダイアログ→除外実行→個人アカウントは維持される"
-          }
-        ],
-        "links": [
-          {
-            "id": "link_admin_dash_members",
-            "label": "ダッシュボード",
-            "destination": "/admin/dashboard",
-            "type": "sidebar"
-          }
-        ],
-        "forms": [
-          {
-            "id": "form_invite",
-            "name": "メンバー招待フォーム",
-            "action": "inviteMember",
-            "fields": ["email", "department"],
-            "submit_button": "btn_invite_member",
-            "validation": "email: メール形式必須。department: 任意、50文字以内。"
-          }
-        ],
-        "data_displays": [
-          {
-            "id": "data_member_list",
-            "type": "table",
-            "data_source": "getMemberList",
-            "description": "メンバー一覧（名前・部署・参加日・最終チェック日。個人スコアは非表示）"
-          }
-        ]
-      }
-    },
-    {
-      "id": "admin_reports",
-      "path": "/admin/reports",
-      "name": "組織レポート",
-      "layout_group": "admin",
-      "requires_auth": true,
-      "allowed_roles": ["org_admin"],
-      "phase": "v2",
-      "components": {
-        "buttons": [
-          {
-            "id": "btn_export_report",
-            "label": "レポートをダウンロード",
-            "action": "PDF/CSVレポート出力",
-            "action_type": "server_action",
-            "target": "exportReport",
-            "expected_result": "レポートファイル(PDF/CSV選択可)がダウンロードされる"
-          }
-        ],
-        "links": [
-          {
-            "id": "link_admin_dash_reports",
-            "label": "ダッシュボード",
-            "destination": "/admin/dashboard",
-            "type": "sidebar"
-          }
-        ],
-        "forms": [],
-        "data_displays": [
-          {
-            "id": "data_weekly_org_report",
-            "type": "card",
-            "data_source": "getOrgWeeklyReport",
-            "description": "組織週次レポート（チーム平均推移・参加率・部署別比較）"
-          },
-          {
-            "id": "data_alert_summary",
-            "type": "card",
-            "data_source": "getAlertSummary",
-            "description": "アラートサマリ（参加率低下チーム・平均スコア急変チームの通知）"
-          }
-        ]
-      }
     }
   ],
 
+  "navigation": {
+    "public_header": {
+      "description": "公開ページ用ヘッダーナビゲーション",
+      "items": [
+        { "label": "ロゴ", "destination": "/", "type": "logo" },
+        { "label": "特徴", "destination": "/#features", "type": "anchor" },
+        { "label": "料金", "destination": "/#pricing", "type": "anchor" },
+        { "label": "ブログ", "destination": "/blog", "type": "navigation" },
+        { "label": "ログイン", "destination": "/auth/login", "type": "navigation" }
+      ]
+    },
+    "auth_bottom_nav": {
+      "description": "認証済みページ用ボトムナビゲーション（Lucide SVGアイコン使用）",
+      "items": [
+        { "label": "Home", "destination": "/home", "icon": "lucide:home", "type": "bottom_nav" },
+        { "label": "履歴", "destination": "/history", "icon": "lucide:bar-chart-2", "type": "bottom_nav" },
+        { "label": "AI分析", "destination": "/ai-analysis", "icon": "lucide:brain", "type": "bottom_nav" },
+        { "label": "設定", "destination": "/settings", "icon": "lucide:settings", "type": "bottom_nav" }
+      ]
+    }
+  },
+
   "flows": [
+    {
+      "id": "flow_demo_to_signup",
+      "role": "user",
+      "name": "デモ体験→新規登録フロー",
+      "description": "ランディング→チェックデモ（3問）→デモ結果→新規登録への導線",
+      "priority": "critical",
+      "steps": [
+        {
+          "step": 1,
+          "page": "landing",
+          "action": "「無料で体験してみる」ボタンをタップ",
+          "element": "btn_cta_demo",
+          "expected_result": "チェックデモ画面(/check-demo)に遷移"
+        },
+        {
+          "step": 2,
+          "page": "check_demo",
+          "action": "「チェック開始」ボタンをタップ",
+          "element": "btn_demo_start",
+          "expected_result": "反応速度1問→短期記憶1問→注意切替1問の3問限定チェックが開始される"
+        },
+        {
+          "step": 3,
+          "page": "check_demo",
+          "action": "3問のデモチェックを実施",
+          "element": "btn_demo_start",
+          "expected_result": "簡易スコアが表示され、「無料で始める」CTAが表示される"
+        },
+        {
+          "step": 4,
+          "page": "check_demo",
+          "action": "「無料で始める」CTAをタップ",
+          "element": "btn_demo_signup",
+          "expected_result": "サインアップ画面(/auth/signup)に遷移"
+        }
+      ],
+      "edge_cases": [
+        {
+          "name": "デモ途中離脱",
+          "condition": "デモチェック中にページを離れた場合",
+          "expected": "状態はローカルに保持しない。再訪問時はデモ開始画面に戻る。"
+        },
+        {
+          "name": "ログイン済みユーザーがデモにアクセス",
+          "condition": "認証済みユーザーが/check-demoにアクセスした場合",
+          "expected": "デモは実行可能だが、CTAは「ホームに戻る」(/home)に変更される。"
+        }
+      ]
+    },
     {
       "id": "flow_first_registration",
       "role": "user",
@@ -1388,7 +1550,7 @@
         {
           "step": 2,
           "page": "subscription",
-          "action": "「月額980円で始める」または「年額7,800円」をタップ",
+          "action": "「月額580円で始める」または「年額4,800円」をタップ",
           "element": "btn_subscribe_monthly",
           "expected_result": "Phase 1: モック決済（即時premium昇格）。本番: Stripe Checkout画面に遷移。"
         },
@@ -1592,6 +1754,50 @@
           "expected": "確認ダイアログ「全てのデータが削除されます。この操作は取り消せません。」表示。「削除する」「キャンセル」の2択。"
         }
       ]
+    },
+    {
+      "id": "flow_blog_seo",
+      "role": "user",
+      "name": "ブログ→デモ→登録SEOフロー",
+      "description": "検索エンジン→ブログ記事→チェックデモ→新規登録のSEO獲得導線",
+      "priority": "high",
+      "steps": [
+        {
+          "step": 1,
+          "page": "blog_article",
+          "action": "検索エンジンからブログ記事に流入",
+          "element": "data_article_content",
+          "expected_result": "ブログ記事が表示される。Article JSON-LDが出力される。"
+        },
+        {
+          "step": 2,
+          "page": "blog_article",
+          "action": "「チェック体験」CTAをタップ",
+          "element": "btn_blog_demo",
+          "expected_result": "チェックデモ画面(/check-demo)に遷移"
+        },
+        {
+          "step": 3,
+          "page": "check_demo",
+          "action": "3問のデモチェックを実施",
+          "element": "btn_demo_start",
+          "expected_result": "簡易スコアが表示され、「無料で始める」CTAが表示される"
+        },
+        {
+          "step": 4,
+          "page": "check_demo",
+          "action": "「無料で始める」をタップ",
+          "element": "btn_demo_signup",
+          "expected_result": "サインアップ画面(/auth/signup)に遷移"
+        }
+      ],
+      "edge_cases": [
+        {
+          "name": "存在しないslug",
+          "condition": "存在しないブログ記事URLにアクセスした場合",
+          "expected": "404ページ表示。ブログ一覧(/blog)へのリンクを併記。"
+        }
+      ]
     }
   ],
 
@@ -1633,37 +1839,18 @@
           "flow_ref": "flow_history"
         }
       ]
-    },
-    {
-      "id": "xrole_org_onboard",
-      "name": "法人管理者→メンバー招待（Phase 2）",
-      "description": "法人管理者がメンバーを招待すると、そのユーザーが法人プランとしてプレミアム機能を利用可能になる",
-      "initiator_role": "org_admin",
-      "affected_roles": ["user_premium"],
-      "flow_steps": [
-        {
-          "role": "org_admin",
-          "action": "メンバー管理画面(/admin/members)からメールアドレスで招待を送信",
-          "flow_ref": "flow_first_registration"
-        },
-        {
-          "role": "user_premium",
-          "expected": "招待メール受信→アカウント作成/紐付け→法人プランとしてプレミアム機能を利用可能",
-          "flow_ref": "flow_first_registration"
-        }
-      ]
     }
   ],
 
   "test_matrix": {
-    "description": "ロールごとの並走テスト割り当て。org_adminはPhase 2のためMVPテスト対象外。",
+    "description": "ロールごとの並走テスト割り当て。B2Cオンリー（user / user_premium の2ロール）。",
     "agents": [
       {
         "agent_id": "agent_free_user",
         "role": "user",
-        "assigned_flows": ["flow_first_registration", "flow_daily_check", "flow_d7_free_trial", "flow_subscription", "flow_history", "flow_settings", "flow_login"],
-        "assigned_pages": ["landing", "auth_signup", "auth_login", "auth_forgot_password", "onboarding", "home", "check", "result", "note", "history", "ai_analysis", "subscription", "settings", "terms"],
-        "focus": "無料ユーザーの全導線検証: 初回登録→日次チェック→D7無料体験→課金→設定→ログイン"
+        "assigned_flows": ["flow_demo_to_signup", "flow_first_registration", "flow_daily_check", "flow_d7_free_trial", "flow_subscription", "flow_history", "flow_settings", "flow_login", "flow_blog_seo"],
+        "assigned_pages": ["landing", "about", "blog_list", "blog_article", "check_demo", "auth_signup", "auth_login", "auth_forgot_password", "onboarding", "home", "check", "result", "note", "history", "ai_analysis", "subscription", "settings", "terms"],
+        "focus": "無料ユーザーの全導線検証: デモ体験→初回登録→日次チェック→D7無料体験→課金→設定→ログイン→SEO導線"
       },
       {
         "agent_id": "agent_premium_user",

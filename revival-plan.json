@@ -1,0 +1,436 @@
+{
+  "project": "cognitive-condition-ai",
+  "projectDir": "C:\\Users\\m-kur\\cognitive-condition-ai",
+  "level": "L4",
+  "generatedAt": "2026-03-15T00:01:24.280Z",
+  "git": {
+    "lastCommitHash": "e6b04ddf45e68df0b06a36a9764802f853f01c2c",
+    "lastCommitDate": "2026-03-14 16:26:41 +0900",
+    "lastCommitMessage": "Fix package.json for Vercel deploy: move dev deps",
+    "totalCommits": 23,
+    "remoteBranches": [
+      "origin/main"
+    ],
+    "daysSinceLastCommit": 0
+  },
+  "buildLint": {
+    "build": "pass",
+    "lint": {
+      "status": "pass",
+      "errors": 0,
+      "warnings": 0
+    }
+  },
+  "tests": {
+    "hasPlaywrightConfig": true,
+    "hasTestDir": true,
+    "testFileCount": 1,
+    "testFiles": [
+      "public.spec.ts"
+    ]
+  },
+  "artifacts": {
+    "hasFlowDiagram": true,
+    "hasDesignHandoff": true,
+    "hasDesignBrief": true,
+    "hasImplInstructions": true,
+    "hasHandoffNotes": false
+  },
+  "roles": [
+    "user",
+    "user_premium",
+    "org_admin"
+  ],
+  "gateEvidence": {
+    "0": {
+      "exists": true,
+      "file": "flow-diagram.json",
+      "signed": false,
+      "signed_at": null
+    },
+    "1": {
+      "exists": true,
+      "file": "ai-assignment.json",
+      "signed": false,
+      "signed_at": null
+    },
+    "2": {
+      "exists": false,
+      "file": "agent-review.json"
+    },
+    "3": {
+      "exists": true,
+      "file": "navigation-check.json",
+      "signed": true,
+      "signed_at": "2026-03-14T06:57:36.412Z"
+    },
+    "4": {
+      "exists": true,
+      "file": "figma-review.json",
+      "signed": false,
+      "signed_at": null
+    },
+    "5": {
+      "exists": true,
+      "file": "build-check.json",
+      "signed": false,
+      "signed_at": null
+    },
+    "7": {
+      "exists": true,
+      "file": "design-review-evidence.json",
+      "signed": true,
+      "signed_at": "2026-03-14T07:10:59.999Z"
+    },
+    "1.5": {
+      "exists": true,
+      "file": "playwright-results.json",
+      "signed": true,
+      "signed_at": "2026-03-14T06:52:00.764Z"
+    },
+    "2.5": {
+      "exists": true,
+      "file": "role-test-results.json",
+      "signed": true,
+      "signed_at": "2026-03-14T06:59:00.393Z"
+    },
+    "M": {
+      "exists": true,
+      "file": "memory-log.json",
+      "signed": true,
+      "signed_at": "2026-03-14T07:13:26.543Z"
+    }
+  },
+  "memoryLog": {
+    "coveredSteps": [
+      "0",
+      "1",
+      "1.5",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "infra"
+    ],
+    "lastStep": "8",
+    "lastTopic": "lesson_learned",
+    "lastTimestamp": "2026-03-14T07:13:25.895Z",
+    "entryCount": 16
+  },
+  "sharedMemory": {
+    "entryCount": 12,
+    "topics": [
+      "lesson_learned",
+      "design_review",
+      "competitive_analysis",
+      "api_contract",
+      "integration",
+      "design_tokens",
+      "design_decision",
+      "architecture",
+      "market_research",
+      "requirements",
+      "pipeline_architecture",
+      "project_init"
+    ],
+    "error": null
+  },
+  "incompleteItems": [
+    {
+      "type": "gate_unsigned",
+      "gate": "0",
+      "file": "flow-diagram.json",
+      "action": "Gate 0 証拠ファイルにHMAC署名なし（再実行推奨）",
+      "priority": "medium"
+    },
+    {
+      "type": "gate_unsigned",
+      "gate": "1",
+      "file": "ai-assignment.json",
+      "action": "Gate 1 証拠ファイルにHMAC署名なし（再実行推奨）",
+      "priority": "medium"
+    },
+    {
+      "type": "gate_unsigned",
+      "gate": "4",
+      "file": "figma-review.json",
+      "action": "Gate 4 証拠ファイルにHMAC署名なし（再実行推奨）",
+      "priority": "medium"
+    },
+    {
+      "type": "gate_missing",
+      "gate": "2",
+      "file": "agent-review.json",
+      "action": "Gate 2 証拠ファイル再生成が必要",
+      "priority": "high"
+    }
+  ],
+  "aiAssignment": [
+    {
+      "wave": 0,
+      "tool": "perplexity",
+      "task": "市場変化・競合最新動向の再調査（pro-search + deep-research）"
+    },
+    {
+      "wave": 0,
+      "tool": "gemini+playwright",
+      "task": "競合サイト再スクレイピング（Docker内SPA対応）"
+    },
+    {
+      "wave": 1,
+      "tool": "team-agent (4名)",
+      "task": "企画並列討論（田中/佐藤/鈴木/山田）→ implementation_instructions.md 更新"
+    },
+    {
+      "wave": 1,
+      "tool": "product-architect",
+      "task": "flow-diagram.json 更新"
+    },
+    {
+      "wave": 2,
+      "tool": "perplexity",
+      "task": "デザイントレンド・受賞UI事例調査"
+    },
+    {
+      "wave": 2,
+      "tool": "stitch",
+      "task": "改善対象画面の再デザイン（バリアント2+）"
+    },
+    {
+      "wave": 2,
+      "tool": "team-agent (3名採点)",
+      "task": "デザイン30点画像採点"
+    },
+    {
+      "wave": 3,
+      "tool": "cursor-agent (並列)",
+      "task": "承認デザインのUI実装"
+    },
+    {
+      "wave": 4,
+      "tool": "team-agent (3名採点)",
+      "task": "UXスコアリング 30点満点（導線/情報設計/視覚的一貫性）"
+    },
+    {
+      "wave": 5,
+      "tool": "claude-code + cursor-agent",
+      "task": "UX低スコア項目の改善実装"
+    },
+    {
+      "wave": 5,
+      "tool": "playwright (docker)",
+      "task": "E2Eテスト実行 → 全合格確認"
+    },
+    {
+      "wave": 6,
+      "tool": "team-agent",
+      "task": "ロール別動線テスト（3ロール: user, user_premium, org_admin）",
+      "roles": [
+        "user",
+        "user_premium",
+        "org_admin"
+      ]
+    },
+    {
+      "wave": 7,
+      "tool": "bash + n8n",
+      "task": "build+lint最終確認 → git push → LINE通知"
+    }
+  ],
+  "checklist": [
+    {
+      "phase": "L1",
+      "name": "コード品質チェック",
+      "tasks": [
+        {
+          "id": "l1-build",
+          "task": "npm run build でビルド成功確認",
+          "status": "done",
+          "tool": "bash"
+        },
+        {
+          "id": "l1-lint",
+          "task": "ESLint エラー修正（現在: 0エラー / 0警告）",
+          "status": "done",
+          "tool": "claude-code + cursor-agent"
+        },
+        {
+          "id": "l1-playwright-setup",
+          "task": "Playwrightテスト環境確認（現在: 1ファイル）",
+          "status": "done",
+          "tool": "claude-code"
+        },
+        {
+          "id": "l1-playwright-run",
+          "task": "Playwrightテスト実行 → 全合格確認",
+          "status": "todo",
+          "tool": "playwright (local or docker)"
+        },
+        {
+          "id": "l1-role-walkthrough",
+          "task": "ロール別動線テスト（3ロール並列Agent）",
+          "status": "todo",
+          "tool": "team-agent",
+          "roles": [
+            "user",
+            "user_premium",
+            "org_admin"
+          ],
+          "description": "各ロールのAgentが全画面をpreview_snapshotで歩き、UX観点でレビュー"
+        },
+        {
+          "id": "l1-fix",
+          "task": "発見された問題の修正",
+          "status": "todo",
+          "tool": "claude-code + cursor-agent"
+        }
+      ]
+    },
+    {
+      "phase": "L2",
+      "name": "UI/UX改善",
+      "tasks": [
+        {
+          "id": "l2-ux-scoring",
+          "task": "3名Agent並列でUXスコアリング（30点満点）",
+          "status": "todo",
+          "tool": "team-agent (3名採点)",
+          "criteria": [
+            "導線の自然さ (10点)",
+            "情報設計の適切さ (10点)",
+            "視覚的一貫性 (10点)"
+          ]
+        },
+        {
+          "id": "l2-ux-threshold",
+          "task": "スコア判定: ≥24点→合格 / 21-23点→部分改善 / ≤20点→大幅改善",
+          "status": "todo",
+          "tool": "auto"
+        },
+        {
+          "id": "l2-ux-fix",
+          "task": "UX改善実装（低スコア項目のみ）",
+          "status": "todo",
+          "tool": "claude-code + cursor-agent"
+        },
+        {
+          "id": "l2-re-test",
+          "task": "改善後のPlaywright再テスト + ロール再動線テスト",
+          "status": "todo",
+          "tool": "playwright + team-agent"
+        }
+      ]
+    },
+    {
+      "phase": "L3",
+      "name": "デザイン改善",
+      "tasks": [
+        {
+          "id": "l3-perplexity-trend",
+          "task": "Perplexity: 最新デザイントレンド調査",
+          "status": "todo",
+          "tool": "perplexity (n8n service-proxy)"
+        },
+        {
+          "id": "l3-stitch-redesign",
+          "task": "Stitch: 改善対象画面の再デザイン（バリアント2つ以上）",
+          "status": "todo",
+          "tool": "stitch"
+        },
+        {
+          "id": "l3-design-scoring",
+          "task": "3名Agent並列でデザイン採点（30点満点、画像ベース）",
+          "status": "todo",
+          "tool": "team-agent (3名採点)"
+        },
+        {
+          "id": "l3-design-impl",
+          "task": "承認デザインの実装（Cursor Agent並列）",
+          "status": "todo",
+          "tool": "cursor-agent"
+        },
+        {
+          "id": "l3-design-review",
+          "task": "実装とデザインの7項目比較チェック",
+          "status": "todo",
+          "tool": "claude-code (preview_snapshot vs stitch screenshot)"
+        }
+      ]
+    },
+    {
+      "phase": "L4",
+      "name": "ビジネスモデル改善",
+      "tasks": [
+        {
+          "id": "l4-perplexity-market",
+          "task": "Perplexity: 市場変化・競合最新動向の再調査",
+          "status": "todo",
+          "tool": "perplexity pro-search + deep-research"
+        },
+        {
+          "id": "l4-gemini-scrape",
+          "task": "Gemini+Playwright: 競合サイト再スクレイピング",
+          "status": "todo",
+          "tool": "gemini + playwright (docker)"
+        },
+        {
+          "id": "l4-team-discussion",
+          "task": "4名企画Agent並列討論（田中/佐藤/鈴木/山田）",
+          "status": "todo",
+          "tool": "team-agent (4名)",
+          "agenda": [
+            "前回の企画からの市場変化",
+            "追加すべき機能・削除すべき機能",
+            "収益モデルの見直し",
+            "感情設計の再検討（4名合議必須）"
+          ]
+        },
+        {
+          "id": "l4-flow-update",
+          "task": "flow-diagram.json の更新",
+          "status": "todo",
+          "tool": "product-architect agent"
+        },
+        {
+          "id": "l4-impl-update",
+          "task": "implementation_instructions.md の更新",
+          "status": "todo",
+          "tool": "claude-code"
+        }
+      ]
+    },
+    {
+      "phase": "Final",
+      "name": "最終確認・報告",
+      "tasks": [
+        {
+          "id": "final-build",
+          "task": "npm run build + lint = エラーゼロ最終確認",
+          "status": "todo",
+          "tool": "bash"
+        },
+        {
+          "id": "final-playwright",
+          "task": "Playwright全テスト合格最終確認",
+          "status": "todo",
+          "tool": "playwright"
+        },
+        {
+          "id": "final-push",
+          "task": "git push + LINE通知",
+          "status": "todo",
+          "tool": "bash + n8n"
+        },
+        {
+          "id": "final-report",
+          "task": "リバイバルレポート作成（変更点・改善点・残課題）",
+          "status": "todo",
+          "tool": "claude-code"
+        }
+      ]
+    }
+  ]
+}
