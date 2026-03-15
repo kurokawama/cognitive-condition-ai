@@ -28,6 +28,7 @@ export default function CheckPage() {
   }, []);
 
   const progressText = `${currentTestIndex + 1}/3`;
+  const progressWidth = `${((currentTestIndex + 1) / 3) * 100}%`;
 
   const transitionTo = (nextIndex: number) => {
     setIsTransitioning(true);
@@ -81,17 +82,25 @@ export default function CheckPage() {
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-md flex-col gap-6 p-6">
-      <header className="rounded-xl bg-white p-5 shadow-sm">
+    <div className="mx-auto flex w-full max-w-md flex-col gap-6 bg-slate-50 p-5">
+      <header className="rounded-3xl bg-white p-5 shadow-[0_8px_30px_rgba(14,165,233,0.08)]">
         <h1 className="text-2xl font-bold text-slate-800">認知チェック</h1>
         <div className="mt-3 flex items-center justify-between">
           <p className="text-lg text-slate-500">{TEST_LABELS[currentTestIndex]}</p>
-          <span className="text-lg font-semibold text-slate-700">{progressText}</span>
+          <span className="inline-flex min-h-12 items-center rounded-full bg-sky-50 px-3 py-1 text-lg font-semibold text-sky-600">
+            {progressText}
+          </span>
+        </div>
+        <div className="mt-4 h-2 w-full rounded-full bg-slate-200">
+          <div
+            className="h-2 rounded-full bg-gradient-to-r from-sky-500 to-green-500 transition-all duration-300"
+            style={{ width: progressWidth }}
+          />
         </div>
       </header>
 
       <div
-        className={`transition-opacity duration-200 ${
+        className={`rounded-3xl bg-white p-4 shadow-sm transition-opacity duration-200 ${
           isTransitioning || isSaving ? "opacity-0" : "opacity-100"
         }`}
       >
@@ -111,7 +120,7 @@ export default function CheckPage() {
           <p className="text-base text-amber-700">{errorMessage}</p>
           <Link
             href="/result"
-            className="mt-3 inline-flex rounded-lg border border-sky-500 px-4 py-2 text-base font-semibold text-sky-600"
+            className="mt-3 inline-flex min-h-12 items-center rounded-lg border border-sky-500 px-4 py-2 text-base font-semibold text-sky-600"
           >
             結果を見る
           </Link>

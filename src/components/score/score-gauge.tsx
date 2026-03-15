@@ -21,6 +21,12 @@ export function ScoreGauge({ score }: ScoreGaugeProps) {
         role="img"
         aria-label={`現在スコア ${normalizedScore}`}
       >
+        <defs>
+          <linearGradient id="scoreGaugeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#0EA5E9" />
+            <stop offset="100%" stopColor="#22C55E" />
+          </linearGradient>
+        </defs>
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -34,7 +40,7 @@ export function ScoreGauge({ score }: ScoreGaugeProps) {
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="#0EA5E9"
+          stroke="url(#scoreGaugeGradient)"
           strokeWidth={strokeWidth}
           strokeLinecap="round"
           strokeDasharray={circumference}
@@ -44,7 +50,7 @@ export function ScoreGauge({ score }: ScoreGaugeProps) {
         />
       </svg>
       <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-[72px] font-bold leading-none text-slate-800">{normalizedScore}</span>
+        <span className="font-sans text-[72px] font-bold leading-none text-slate-800">{normalizedScore}</span>
         <span className="text-base text-slate-500">/100</span>
       </div>
     </div>
