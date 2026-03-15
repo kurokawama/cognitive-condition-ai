@@ -30,12 +30,13 @@ export async function saveCheckResult(input: z.infer<typeof scoreSchema>) {
 
   // Check daily limit (1 check per day)
   const today = new Date().toISOString().slice(0, 10);
+  const tomorrow = new Date(new Date(today).getTime() + 86400000).toISOString().slice(0, 10);
   const { data: existing } = await supabase
     .from("check_sessions")
     .select("id")
     .eq("user_id", user.id)
     .gte("created_at", `${today}T00:00:00`)
-    .lt("created_at", `${today}T23:59:59`)
+    .lt("created_at", `${tomorrow}T00:00:00`)
     .limit(1);
 
   if (existing && existing.length > 0) {

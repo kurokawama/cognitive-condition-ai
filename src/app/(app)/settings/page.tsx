@@ -23,10 +23,10 @@ export default async function SettingsPage() {
   const isPremiumPlan = profile?.subscription_plan === "premium";
   const notificationEnabled = profile?.notification_enabled ?? false;
 
-  async function logoutAndRedirect() {
+  async function handleLogout() {
     "use server";
     await logout();
-    redirect("/login");
+    // redirect is handled by middleware after session is cleared
   }
 
   return (
@@ -113,7 +113,7 @@ export default async function SettingsPage() {
           </button>
         </section>
 
-        <form action={logoutAndRedirect}>
+        <form action={handleLogout}>
           <button
             type="submit"
             className="flex min-h-12 w-full items-center justify-center rounded-xl border border-slate-300 bg-surface px-6 py-3 text-lg font-semibold text-text-primary shadow-sm transition hover:bg-slate-50"
