@@ -1,15 +1,15 @@
-// Public page rendering tests — no authentication required
+// Public page rendering tests — no authentication required (B2C Revival v3)
 import { test, expect } from "@playwright/test";
 
 test.describe("Public Pages", () => {
-  test("landing page renders", async ({ page }) => {
+  test("landing page renders with correct H1", async ({ page }) => {
     await page.goto("/");
-    await expect(page.locator("h1")).toContainText("認知コンディション AI");
+    await expect(page.locator("h1")).toContainText("認知力");
   });
 
-  test("landing page has register CTA", async ({ page }) => {
+  test("landing page has CTA button", async ({ page }) => {
     await page.goto("/");
-    const cta = page.getByRole("link", { name: /無料で始める/ });
+    const cta = page.getByRole("link", { name: /無料で.*チェック|無料で始める/ }).first();
     await expect(cta).toBeVisible();
   });
 
@@ -19,26 +19,54 @@ test.describe("Public Pages", () => {
     await expect(loginLink).toBeVisible();
   });
 
-  test("login page renders", async ({ page }) => {
+  test("landing page has social proof", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByText(/25,000/)).toBeVisible();
+  });
+
+  test("landing page has FAQ section", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByText("よくある質問")).toBeVisible();
+  });
+
+  test("landing page has PMDA disclaimer in footer", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByText("医療診断を行うものではありません")).toBeVisible();
+  });
+
+  test("login page renders with OTP form", async ({ page }) => {
     await page.goto("/login");
     await expect(page.locator("h1")).toContainText("ログイン");
+    await expect(page.locator('input[type="email"]')).toBeVisible();
+    await expect(page.getByRole("button", { name: /確認コード/ })).toBeVisible();
   });
 
-  test("login form has email and password fields", async ({ page }) => {
-    await page.goto("/login");
-    await expect(page.locator('input[name="email"]')).toBeVisible();
-    await expect(page.locator('input[name="password"]')).toBeVisible();
+  test("check-demo page renders", async ({ page }) => {
+    await page.goto("/check-demo");
+    await expect(page.getByText("無料チェック体験")).toBeVisible();
+    await expect(page.getByRole("button", { name: /チェックを始める/ })).toBeVisible();
   });
 
-  test("register page renders", async ({ page }) => {
-    await page.goto("/register");
-    await expect(page.locator("h1")).toContainText("新規登録");
+  test("about page renders", async ({ page }) => {
+    await page.goto("/about");
+    await expect(page.getByText("認知コンディション AIとは")).toBeVisible();
+    await expect(page.getByText("安全性について")).toBeVisible();
   });
 
-  test("register form has required fields", async ({ page }) => {
-    await page.goto("/register");
-    await expect(page.locator('input[name="email"]')).toBeVisible();
-    await expect(page.locator('input[name="password"]')).toBeVisible();
+  test("blog page renders with articles", async ({ page }) => {
+    await page.goto("/blog");
+    await expect(page.getByText("ブログ")).toBeVisible();
+  });
+
+  test("blog article page renders", async ({ page }) => {
+    await page.goto("/blog/what-is-cognitive-conditioning");
+    await expect(page.locator("h1")).toContainText("認知コンディション");
+  });
+
+  test("subscription page renders without auth", async ({ page }) => {
+    await page.goto("/subscription");
+    await expect(page.getByText(/プレミアム/).first()).toBeVisible();
+    await expect(page.getByText(/¥580/).first()).toBeVisible();
   });
 
   test("terms page renders", async ({ page }) => {
@@ -49,7 +77,6 @@ test.describe("Public Pages", () => {
 
   test("unauthenticated user redirected from /home", async ({ page }) => {
     await page.goto("/home");
-    // Should redirect to login page
     await page.waitForURL("**/login**", { timeout: 10000 });
     await expect(page.locator("h1")).toContainText("ログイン");
   });
@@ -60,19 +87,9 @@ test.describe("Public Pages", () => {
     await expect(page.locator("h1")).toContainText("ログイン");
   });
 
-  test("landing page features section exists", async ({ page }) => {
+  test("no red colors on landing page (PMDA)", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByText("1分で完了")).toBeVisible();
-    await expect(page.getByText("AIが解釈")).toBeVisible();
-    await expect(page.getByText("変化を可視化")).toBeVisible();
-  });
-
-  test("login page validation - empty submit shows no server error", async ({ page }) => {
-    await page.goto("/login");
-    const submitBtn = page.getByRole("button", { name: /ログイン/ });
-    await expect(submitBtn).toBeVisible();
-    await submitBtn.click();
-    // Should not crash with server error
-    await expect(page.locator("body")).not.toContainText("500");
+    const redElements = await page.locator('[class*="red"]').count();
+    expect(redElements).toBe(0);
   });
 });
