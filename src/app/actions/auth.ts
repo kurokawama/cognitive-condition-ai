@@ -3,18 +3,20 @@
 import { createClient } from "@/lib/supabase/server";
 import { z } from "zod";
 
-const emailSchema = z.object({
+const signInSchema = z.object({
   email: z.string().email("有効なメールアドレスを入力してください"),
+  password: z.string().min(6, "パスワードは6文字以上で入力してください"),
 });
 
-const otpSchema = z.object({
-  email: z.string().email(),
-  token: z.string().length(6, "確認コードは6桁です"),
+const signUpSchema = z.object({
+  email: z.string().email("有効なメールアドレスを入力してください"),
+  password: z.string().min(6, "パスワードは6文字以上で入力してください"),
 });
 
-export async function sendOtp(formData: FormData) {
-  const parsed = emailSchema.safeParse({
+export async function signIn(formData: FormData) {
+  const parsed = signInSchema.safeParse({
     email: formData.get("email"),
+    password: formData.get("password"),
   });
 
   if (!parsed.success) {
@@ -22,24 +24,43 @@ export async function sendOtp(formData: FormData) {
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithOtp({
+  const { error } = await supabase.auth.signInWithPassword({
     email: parsed.data.email,
-    options: {
-      shouldCreateUser: true,
-    },
+    password: parsed.data.password,
   });
 
   if (error) {
-    return { error: "確認コードの送信に失敗しました。しばらくしてからお試しください" };
+    return { error: "メールアドレスまたはパスワードが正しくありません" };
+  }
+
+  // Ensure user profile exists
+  const { data: { user } } = await supabase.auth.getUser();
+  if (user) {
+    const { data: existing } = await supabase
+      .from("users")
+      .select("id")
+      .eq("id", user.id)
+      .single();
+
+    if (!existing) {
+      await supabase.from("users").insert({
+        id: user.id,
+        email: user.email!,
+        display_name: null,
+        subscription_plan: "free",
+        streak_days: 0,
+        notification_enabled: false,
+      });
+    }
   }
 
   return { success: true };
 }
 
-export async function verifyOtp(formData: FormData) {
-  const parsed = otpSchema.safeParse({
+export async function signUp(formData: FormData) {
+  const parsed = signUpSchema.safeParse({
     email: formData.get("email"),
-    token: formData.get("token"),
+    password: formData.get("password"),
   });
 
   if (!parsed.success) {
@@ -47,14 +68,16 @@ export async function verifyOtp(formData: FormData) {
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.verifyOtp({
+  const { error } = await supabase.auth.signUp({
     email: parsed.data.email,
-    token: parsed.data.token,
-    type: "email",
+    password: parsed.data.password,
   });
 
   if (error) {
-    return { error: "確認コードが正しくありません" };
+    if (error.message.includes("already registered")) {
+      return { error: "このメールアドレスは既に登録されています" };
+    }
+    return { error: "アカウントの作成に失敗しました。しばらくしてからお試しください" };
   }
 
   // Ensure user profile exists
