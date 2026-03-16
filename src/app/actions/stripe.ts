@@ -44,8 +44,10 @@ export async function createCheckoutSession(plan: "monthly" | "yearly") {
     });
 
     return { url: session.url };
-  } catch {
-    return { error: "決済セッションの作成に失敗しました" };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    console.error("[Stripe Checkout Error]", message);
+    return { error: `決済セッションの作成に失敗しました: ${message}` };
   }
 }
 
