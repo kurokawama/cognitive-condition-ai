@@ -14,6 +14,11 @@ function isPublicPath(pathname: string): boolean {
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
+  // Disable caching for all HTML pages (LINE in-app browser aggressively caches)
+  supabaseResponse.headers.set("Cache-Control", "no-cache, no-store, must-revalidate");
+  supabaseResponse.headers.set("Pragma", "no-cache");
+  supabaseResponse.headers.set("Expires", "0");
+
   // Skip auth when Supabase is not configured
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     const pathname = request.nextUrl.pathname;
