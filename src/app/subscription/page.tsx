@@ -295,14 +295,20 @@ function SubscriptionContent() {
           <div className="mx-auto max-w-5xl rounded-xl border border-slate-200 bg-white p-3 shadow-[0_-4px_12px_rgba(0,0,0,0.06)]">
             <button
               type="button"
-              onClick={() => void handleCheckout("yearly")}
+              onClick={() => void handleCheckout(billingCycle)}
               disabled={isLoading}
               className="flex min-h-12 w-full flex-col items-center justify-center rounded-xl bg-green-800 px-4 py-3 text-white disabled:opacity-50"
             >
               <span className="text-lg font-semibold">
-                {isLoading ? "処理中..." : `年額プランで始める — ¥${PRICING.yearly.toLocaleString()}/年`}
+                {isLoading
+                  ? "処理中..."
+                  : billingCycle === "yearly"
+                    ? `年額プランで始める — ¥${PRICING.yearly.toLocaleString()}/年`
+                    : `月額プランで始める — ¥${PRICING.monthly.toLocaleString()}/月`}
               </span>
-              <span className="text-base text-green-100">7日間の無料トライアル付き</span>
+              <span className="text-base text-green-100">
+                {billingCycle === "yearly" ? "7日間の無料トライアル付き" : "いつでもキャンセルできます"}
+              </span>
             </button>
           </div>
         </div>
