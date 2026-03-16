@@ -30,6 +30,10 @@ export async function sendOtp(formData: FormData) {
   });
 
   if (error) {
+    console.error("[OTP Send Error]", error.message, error.status);
+    if (error.status === 429) {
+      return { error: "送信制限に達しました。1時間ほどお待ちいただくか、前回送信されたコードをご確認ください" };
+    }
     return { error: "確認コードの送信に失敗しました。しばらくしてからお試しください" };
   }
 
