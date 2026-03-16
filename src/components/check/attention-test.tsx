@@ -116,9 +116,17 @@ export function AttentionTest({ onComplete }: AttentionTestProps) {
     [trialIndex]
   );
 
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
   const handleSelect = (choiceIndex: number) => {
     if (locked) return;
     setLocked(true);
+    setSelectedIndex(choiceIndex);
+
+    // Haptic feedback
+    if (typeof navigator !== "undefined" && navigator.vibrate) {
+      navigator.vibrate(30);
+    }
 
     const correct = choiceIndex === current.trial.correctIndex;
     const nextResults: AttentionTrial[] = [
@@ -139,8 +147,9 @@ export function AttentionTest({ onComplete }: AttentionTestProps) {
     setTimeout(() => {
       setTrialIndex((prev) => prev + 1);
       setCurrent(generateTrial());
+      setSelectedIndex(null);
       setLocked(false);
-    }, 200);
+    }, 300);
   };
 
   return (
@@ -160,7 +169,11 @@ export function AttentionTest({ onComplete }: AttentionTestProps) {
             type="button"
             onClick={() => handleSelect(index)}
             disabled={locked}
-            className="rounded-xl border border-slate-300 bg-white px-3 py-4 text-lg font-medium text-slate-800 transition-colors hover:border-sky-400 disabled:opacity-70"
+            className={`rounded-xl border px-3 py-4 text-lg font-medium transition-all duration-100 ${
+              selectedIndex === index
+                ? "scale-95 border-green-500 bg-green-100 text-green-700"
+                : "border-slate-300 bg-white text-slate-800 active:scale-95 active:border-sky-500 active:bg-sky-50 disabled:opacity-70"
+            }`}
           >
             {option.label}
           </button>

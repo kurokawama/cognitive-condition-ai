@@ -52,33 +52,38 @@ export default function CheckPage() {
     setErrorMessage(null);
     setIsSaving(true);
 
-    const score = calculateScore(
-      reactionTrialsRef.current,
-      memoryTrialsRef.current,
-      trials,
-      startedAtRef.current
-    );
+    try {
+      const score = calculateScore(
+        reactionTrialsRef.current,
+        memoryTrialsRef.current,
+        trials,
+        startedAtRef.current
+      );
 
-    const result = await saveCheckResult({
-      scoreTotal: score.total,
-      scoreReaction: score.reaction,
-      scoreMemory: score.memory,
-      scoreAttention: score.attention,
-      reactionTimes: score.reactionTimes,
-      memoryCorrect: score.memoryCorrect,
-      memoryTotal: score.memoryTotal,
-      attentionCorrect: score.attentionCorrect,
-      attentionTotal: score.attentionTotal,
-      durationMs: score.durationMs,
-    });
+      const result = await saveCheckResult({
+        scoreTotal: score.total,
+        scoreReaction: score.reaction,
+        scoreMemory: score.memory,
+        scoreAttention: score.attention,
+        reactionTimes: score.reactionTimes,
+        memoryCorrect: score.memoryCorrect,
+        memoryTotal: score.memoryTotal,
+        attentionCorrect: score.attentionCorrect,
+        attentionTotal: score.attentionTotal,
+        durationMs: score.durationMs,
+      });
 
-    if (result.error) {
+      if (result.error) {
+        setIsSaving(false);
+        setErrorMessage(result.error);
+        return;
+      }
+
+      router.push("/result");
+    } catch {
       setIsSaving(false);
-      setErrorMessage(result.error);
-      return;
+      setErrorMessage("保存中にエラーが発生しました。もう一度お試しください。");
     }
-
-    router.push("/result");
   };
 
   return (

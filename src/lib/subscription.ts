@@ -15,8 +15,12 @@ export function canAccessAiAnalysis(user: User, checkCount: number): boolean {
   return false;
 }
 
-export function canAccessAiTalk(user: User): boolean {
-  return isPremium(user);
+export function canAccessAiTalk(user: User, talkCount: number): boolean {
+  // Premium users always have access
+  if (isPremium(user)) return true;
+  // Free users get 1 free trial
+  if (talkCount === 0) return true;
+  return false;
 }
 
 export function getSubscriptionLabel(plan: SubscriptionPlan): string {

@@ -11,6 +11,14 @@ function isPublicPath(pathname: string): boolean {
   );
 }
 
+/** Prevent LINE in-app browser and other aggressive caches from serving stale HTML */
+function setNoCacheHeaders(response: NextResponse): NextResponse {
+  response.headers.set("Cache-Control", "no-cache, no-store, must-revalidate");
+  response.headers.set("Pragma", "no-cache");
+  response.headers.set("Expires", "0");
+  return response;
+}
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
@@ -18,11 +26,11 @@ export async function updateSession(request: NextRequest) {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     const pathname = request.nextUrl.pathname;
     if (isPublicPath(pathname)) {
-      return supabaseResponse;
+      return setNoCacheHeaders(supabaseResponse);
     }
     const url = request.nextUrl.clone();
     url.pathname = "/login";
-    return NextResponse.redirect(url);
+    return setNoCacheHeaders(NextResponse.redirect(url));
   }
 
   const supabase = createServerClient(
@@ -54,15 +62,15 @@ export async function updateSession(request: NextRequest) {
 
   // Public paths — no auth required
   if (isPublicPath(pathname)) {
-    return supabaseResponse;
+    return setNoCacheHeaders(supabaseResponse);
   }
 
   // Protected paths — redirect to login if no user
   if (!user && pathname.startsWith("/")) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
-    return NextResponse.redirect(url);
+    return setNoCacheHeaders(NextResponse.redirect(url));
   }
 
-  return supabaseResponse;
+  return setNoCacheHeaders(supabaseResponse);
 }

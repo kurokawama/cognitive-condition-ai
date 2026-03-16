@@ -87,7 +87,14 @@ export async function sendAiTalkMessage(
     .eq("id", authUser.id)
     .single();
 
-  if (!profile || !canAccessAiTalk(profile as User)) {
+  // Count existing talk conversations
+  const { count: talkCount } = await supabase
+    .from("ai_conversations")
+    .select("id", { count: "exact" })
+    .eq("user_id", authUser.id)
+    .eq("conversation_type", "talk");
+
+  if (!profile || !canAccessAiTalk(profile as User, talkCount || 0)) {
     return { success: false, error: "AIトークはプレミアムプランの機能です" };
   }
 

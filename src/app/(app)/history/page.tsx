@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { getRecentSessions } from "@/app/actions/check";
 import { ScoreChart, type ScoreChartPoint } from "@/components/chart/score-chart";
 import { isPremium } from "@/lib/subscription";
+import { PremiumBanner } from "@/components/premium/premium-banner";
 import { createClient } from "@/lib/supabase/server";
 import type { User } from "@/types/database";
 
@@ -79,18 +81,24 @@ export default async function HistoryPage() {
               <ScoreChart data={ninetyDayData} mode="history" height={240} />
             </div>
           ) : (
-            <div className="relative mt-4 overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-6 text-center">
-              <div className="pointer-events-none blur-[1px]">
-                <div className="mx-auto h-[220px] w-full max-w-3xl rounded-xl bg-gradient-to-br from-sky-100 via-white to-green-50" />
-              </div>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <p className="rounded-full bg-sky-500 px-6 py-3 text-lg font-semibold text-white shadow-sm">
-                  プレミアムで90日履歴を見る
-                </p>
-              </div>
-            </div>
+            <Link
+              href="/subscription"
+              className="mt-4 block rounded-2xl border-2 border-sky-300 bg-gradient-to-b from-sky-50 to-white p-6 text-center shadow-md transition active:scale-[0.98] hover:shadow-lg"
+            >
+              <p className="text-lg font-bold text-slate-800">
+                90日間の変化を見てみませんか？
+              </p>
+              <p className="mt-1 text-base text-slate-500">
+                長期トレンドで、日々の変化をもっと深く理解できます
+              </p>
+              <span className="mt-4 inline-flex min-h-12 items-center rounded-full bg-sky-500 px-8 py-3 text-lg font-semibold text-white shadow-sm">
+                7日間無料で試す
+              </span>
+              <p className="mt-2 text-base text-slate-400">月額580円 / 年額なら1日13円</p>
+            </Link>
           )}
         </section>
+        {!premiumUser && <PremiumBanner variant="history" />}
       </div>
     </div>
   );
