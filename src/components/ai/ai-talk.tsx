@@ -43,7 +43,7 @@ export function AiTalk({ onClose }: AiTalkProps) {
       inputRef.current?.focus();
     }
     void greet();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   async function handleSend() {
     const trimmed = input.trim();

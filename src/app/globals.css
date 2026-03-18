@@ -43,13 +43,20 @@ body {
   font-family: var(--font-sans);
 }
 
-/* Min font size: 17px (PMDA compliance for elderly users) */
+/* Min font size: 16px (accessibility baseline) */
 p, span, label, a, button, li {
-  font-size: max(1.0625rem, 1em);
+  font-size: max(1rem, 1em);
 }
 
-/* Touch target: minimum 48x48px */
-button, a, [role="button"] {
-  min-height: 3rem;
-  min-width: 3rem;
+/* Touch target: minimum 44x44px (WCAG 2.5.8) — only for interactive elements */
+button, [role="button"] {
+  min-height: 2.75rem;
 }
+
+/* Inline links should NOT have forced min-height/min-width (causes layout issues) */
+a {
+  min-height: auto;
+  min-width: auto;
+}
+
+/* Standalone link buttons (CTA) get touch target sizing via Tailwind classes instead */

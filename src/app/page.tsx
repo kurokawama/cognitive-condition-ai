@@ -297,9 +297,11 @@ export default function LandingPage() {
         {/* Footer */}
         <footer className="bg-slate-800 px-5 py-10 text-white">
           <div className="mx-auto flex max-w-4xl flex-col items-center gap-4">
-            <div className="flex gap-6 text-base text-slate-400">
+            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-base text-slate-400">
               <Link href="/about" className="inline-flex min-h-12 items-center hover:text-white">サービス概要</Link>
               <Link href="/terms" className="inline-flex min-h-12 items-center hover:text-white">利用規約</Link>
+              <Link href="/privacy" className="inline-flex min-h-12 items-center hover:text-white">プライバシーポリシー</Link>
+              <Link href="/tokushoho" className="inline-flex min-h-12 items-center hover:text-white">特定商取引法に基づく表記</Link>
               <Link href="/blog" className="inline-flex min-h-12 items-center hover:text-white">ブログ</Link>
             </div>
             <p className="text-sm text-slate-500">© 2026 認知コンディション AI</p>
