@@ -140,7 +140,7 @@ export default function TermsPage() {
             <dl className="mt-3 space-y-2">
               <div className="flex gap-4">
                 <dt className="w-24 shrink-0 text-base text-text-secondary">運営者</dt>
-                <dd>黒川 雅史</dd>
+                <dd>黒川 将大</dd>
               </div>
               <div className="flex gap-4">
                 <dt className="w-24 shrink-0 text-base text-text-secondary">連絡先</dt>

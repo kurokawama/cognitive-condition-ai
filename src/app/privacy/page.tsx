@@ -16,7 +16,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-xl font-semibold text-text-primary">1. はじめに</h2>
             <p className="mt-3">
-              認知コンディション AI（以下「本サービス」）を運営する黒川 雅史（以下「運営者」）は、
+              認知コンディション AI（以下「本サービス」）を運営する黒川 将大（以下「運営者」）は、
               お客様の個人情報の保護を重要な責務と認識し、以下のとおりプライバシーポリシーを定めます。
             </p>
           </section>
@@ -145,7 +145,7 @@ export default function PrivacyPage() {
             <dl className="mt-3 space-y-2">
               <div className="flex gap-4">
                 <dt className="w-24 shrink-0 text-base text-text-secondary">運営者</dt>
-                <dd>黒川 雅史</dd>
+                <dd>黒川 将大</dd>
               </div>
               <div className="flex gap-4">
                 <dt className="w-24 shrink-0 text-base text-text-secondary">メール</dt>

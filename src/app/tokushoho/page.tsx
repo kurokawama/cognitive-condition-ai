@@ -16,11 +16,11 @@ export default function TokushohoPage() {
             <tbody className="divide-y divide-slate-100">
               <tr>
                 <th className="w-1/3 bg-slate-50 px-6 py-4 text-left font-semibold text-text-primary">販売事業者</th>
-                <td className="px-6 py-4 text-slate-700">黒川 雅史</td>
+                <td className="px-6 py-4 text-slate-700">黒川 将大</td>
               </tr>
               <tr>
                 <th className="w-1/3 bg-slate-50 px-6 py-4 text-left font-semibold text-text-primary">運営統括責任者</th>
-                <td className="px-6 py-4 text-slate-700">黒川 雅史</td>
+                <td className="px-6 py-4 text-slate-700">黒川 将大</td>
               </tr>
               <tr>
                 <th className="w-1/3 bg-slate-50 px-6 py-4 text-left font-semibold text-text-primary">所在地</th>

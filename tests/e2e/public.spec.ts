@@ -51,7 +51,7 @@ test.describe("Public Pages", () => {
   test("tokushoho page renders", async ({ page }) => {
     await page.goto("/tokushoho");
     await expect(page.locator("h1")).toContainText("特定商取引法に基づく表記");
-    await expect(page.getByText("黒川 雅史").first()).toBeVisible();
+    await expect(page.getByText("黒川 将大").first()).toBeVisible();
     await expect(page.getByText("キャンセル・解約")).toBeVisible();
   });
 
