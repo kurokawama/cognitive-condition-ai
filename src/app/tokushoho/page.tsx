@@ -9,7 +9,7 @@ export default function TokushohoPage() {
     <div className="min-h-screen bg-slate-50 px-5 py-12">
       <div className="mx-auto max-w-3xl">
         <h1 className="text-2xl font-bold text-text-primary">特定商取引法に基づく表記</h1>
-        <p className="mt-2 text-base text-text-secondary">最終更新日: 2026年3月18日</p>
+        <p className="mt-2 text-base text-text-secondary">最終更新日: 2026年3月20日</p>
 
         <div className="mt-8 overflow-hidden rounded-xl border border-slate-200 bg-white">
           <table className="w-full text-lg">
@@ -24,11 +24,11 @@ export default function TokushohoPage() {
               </tr>
               <tr>
                 <th className="w-1/3 bg-slate-50 px-6 py-4 text-left font-semibold text-text-primary">所在地</th>
-                <td className="px-6 py-4 text-slate-700">（バーチャルオフィス契約後に記載予定）</td>
+                <td className="px-6 py-4 text-slate-700">〒104-0061 東京都中央区銀座一丁目22番11号 銀座大竹ビジデンス 2F</td>
               </tr>
               <tr>
                 <th className="w-1/3 bg-slate-50 px-6 py-4 text-left font-semibold text-text-primary">電話番号</th>
-                <td className="px-6 py-4 text-slate-700">（バーチャルオフィス契約後に記載予定）</td>
+                <td className="px-6 py-4 text-slate-700">03-6844-5369</td>
               </tr>
               <tr>
                 <th className="w-1/3 bg-slate-50 px-6 py-4 text-left font-semibold text-text-primary">メールアドレス</th>
